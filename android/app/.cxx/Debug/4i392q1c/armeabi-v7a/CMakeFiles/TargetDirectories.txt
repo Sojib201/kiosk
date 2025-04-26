@@ -1,0 +1,2 @@
+E:/sojib/sojib/kiosk/android/app/.cxx/Debug/4i392q1c/armeabi-v7a/CMakeFiles/edit_cache.dir
+E:/sojib/sojib/kiosk/android/app/.cxx/Debug/4i392q1c/armeabi-v7a/CMakeFiles/rebuild_cache.dir

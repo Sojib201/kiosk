@@ -111,7 +111,6 @@ class FoodKioskScreen extends StatelessWidget {
                           );
                         }).toList(),
                       ),
-
                       //HomeBannerSlider(),
                       //ProductIamgeSlider(),
 
