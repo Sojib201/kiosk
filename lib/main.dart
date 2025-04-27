@@ -16,9 +16,9 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
 
      // designSize: const Size(360, 690),
-      //designSize: const Size(800, 1280),
+      designSize: const Size(800, 1280),
       //designSize: _getDesignSize(),
-      designSize: isTablet() ? const Size(800, 1280) : const Size(360, 690),
+      //designSize: isTablet() ? const Size(800, 1280) : const Size(360, 690),
       minTextAdapt: true,
       splitScreenMode: true,
       child: MaterialApp(
@@ -46,8 +46,8 @@ class MyApp extends StatelessWidget {
   // }
 
 }
-bool isTablet() {
-  final deviceWidth = WidgetsBinding.instance.window.physicalSize.width /
-      WidgetsBinding.instance.window.devicePixelRatio;
-  return deviceWidth > 600;
-}
+// bool isTablet() {
+//   final deviceWidth = WidgetsBinding.instance.window.physicalSize.width /
+//       WidgetsBinding.instance.window.devicePixelRatio;
+//   return deviceWidth > 600;
+// }

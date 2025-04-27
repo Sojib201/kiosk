@@ -41,11 +41,12 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
   @override
   Widget build(BuildContext context) {
 
-    final bool tablet = isTablet();
-    final int crossAxisCount = tablet ? 4 : 2;
-    final double containerWidth = tablet
-        ? (MediaQuery.of(context).size.width * 0.14).w
-        : (MediaQuery.of(context).size.width * 0.22).w;
+
+    // final bool tablet = isTablet();
+    // final int crossAxisCount = tablet ? 4 : 2;
+    // final double containerWidth = tablet
+    //     ? (MediaQuery.of(context).size.width * 0.14).w
+    //     : (MediaQuery.of(context).size.width * 0.22).w;
 
     return Scaffold(
       body: SafeArea(
@@ -131,7 +132,8 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                       color: ColorUtils.secondaryColor,
                       borderRadius: BorderRadius.circular(14.r),),
                   //width: (size.width * 0.22).w,
-                  width: containerWidth,
+                  //width: containerWidth,
+                  width: (MediaQuery.of(context).size.width * 0.14).w,
                   padding:  EdgeInsets.symmetric(vertical: 10.h),
                   child: ListView.builder(
                     itemCount: 10,
@@ -184,9 +186,9 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                           itemCount: 20,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                            //crossAxisCount: 4,
+                            crossAxisCount: 4,
                                 //crossAxisCount: getCrossAxisCount(context),
-                                crossAxisCount: crossAxisCount,
+                                //crossAxisCount: crossAxisCount,
                             mainAxisSpacing: 10.h,
                             crossAxisSpacing: 4.w,
                             childAspectRatio: 0.76,
