@@ -10,13 +10,13 @@ class OrderCartWidget extends StatelessWidget {
   final VoidCallback onOrder;
 
   const OrderCartWidget({
-    Key? key,
+    super.key,
     required this.title,
     required this.itemCount,
     required this.price,
     required this.onCancel,
     required this.onOrder,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,14 +47,14 @@ class OrderCartWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12.r),
                 ),
               ),
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200),
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade300),
             ),
             onPressed: onCancel,
             child: Text(
               "Cancel",
               style: TextStyle(
                 fontSize: 22.sp,
-                color: Colors.deepOrange,
+                color: ColorUtils.redColor,
               ),
             ),
           ),
@@ -99,7 +99,7 @@ class OrderCartWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(width: 24.w),
+              SizedBox(width: 40.w),
               ElevatedButton(
                 onPressed: onOrder,
                 style: ElevatedButton.styleFrom(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiosk/utils/color_utils.dart';
 
 class ItemCard extends StatelessWidget {
   const ItemCard();
@@ -10,13 +11,12 @@ class ItemCard extends StatelessWidget {
       onTap: () {
         print('xx');
       },
-
       child: Padding(
         padding:  EdgeInsets.symmetric(horizontal: 6.w),
         child: Container(
           padding:  EdgeInsets.only(top: 6.h,left: 6.w,right: 6.w,bottom: 7.h),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: ColorUtils.primaryColor,
             borderRadius: BorderRadius.circular(14.r),
             boxShadow: [
               BoxShadow(
@@ -92,7 +92,7 @@ class ItemCard extends StatelessWidget {
                   Text(
                     "\$5.50",
                     style: TextStyle(
-                      fontSize: 15.sp,
+                      fontSize: 17.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
@@ -101,7 +101,7 @@ class ItemCard extends StatelessWidget {
                     onTap: () {},
                     child: Icon(
                       Icons.add_circle_outline,
-                      size: 20.h,
+                      size: 24.h,
                       color: Colors.red,
                     ),
                   )
