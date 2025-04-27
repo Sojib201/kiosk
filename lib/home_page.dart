@@ -55,7 +55,10 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(16),
           child: Column(
               children: [
-                HomeBannerSlider(),
+                HomeBannerSlider(
+                  imageAssets: imageUrls,
+                  onTap: (){},
+                ),
                 // ProductIamgeSlider()
               ],
 

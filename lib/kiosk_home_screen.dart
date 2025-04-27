@@ -4,240 +4,208 @@ import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiosk/utils/color_utils.dart';
+import 'package:kiosk/widgets/home_banner_slider.dart';
+import 'package:kiosk/widgets/item_card.dart';
+import 'package:kiosk/widgets/order_cart_widget.dart';
+import 'package:kiosk/widgets/side_bar_item.dart';
+import 'package:kiosk/widgets/tag_widget.dart';
 
-class FoodKioskScreen extends StatelessWidget {
+import 'main.dart';
+
+class FoodKioskScreen extends StatefulWidget {
   const FoodKioskScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+  State<FoodKioskScreen> createState() => _FoodKioskScreenState();
+}
 
-    final List<String> imageUrls = [
-      'https://picsum.photos/id/1018/400/250',
-      'https://picsum.photos/id/1015/400/250',
-      'https://picsum.photos/id/1019/400/250',
-    ];
+class _FoodKioskScreenState extends State<FoodKioskScreen> {
+  final List<String> imageAssets = [
+    'assets/chowmin.png',
+    'assets/pizza.png',
+    'assets/burger1.jpg',
+  ];
+
+  int getCrossAxisCount(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+
+    if (deviceWidth > 600) {
+      return 4; // Tablet
+    } else {
+      return 2; // Phone
+    }
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    final bool tablet = isTablet();
+    final int crossAxisCount = tablet ? 4 : 2;
+    final double containerWidth = tablet
+        ? (MediaQuery.of(context).size.width * 0.14).w
+        : (MediaQuery.of(context).size.width * 0.22).w;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
       body: SafeArea(
           child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding:  EdgeInsets.all(12.h),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Expanded(
-                //   flex:6,
-                //   child: ClipRRect(
-                //     borderRadius: BorderRadius.circular(16),
-                //     child: Image.asset(
-                //       "assets/3DineBase.png",
-                //       //width: double.infinity,
-                //       fit: BoxFit.fill,
-                //       height: 50,
+                //   flex: 6,
+                //   child:RichText(
+                //     text:  TextSpan(
+                //       style: TextStyle(
+                //         fontSize: 30.sp,
+                //         fontWeight: FontWeight.bold,
+                //         color: Colors.deepOrange,
+                //       ),
+                //       children: [
+                //         TextSpan(text: "3"),
+                //         TextSpan(
+                //           text: "DineBase",
+                //           style: TextStyle(color: Colors.brown),
+                //         ),
+                //       ],
                 //     ),
                 //   ),
                 // ),
-
                 Expanded(
-                  flex: 6,
-                  child: _Logo(),
+                  flex: 1,
+                  child: Image.asset(
+                    'assets/3DineBase.png',
+                    fit: BoxFit.scaleDown,
+                    height: 55.h,
+                  ),
                 ),
 
                 Expanded(
                   flex: 3,
-                  child: _SearchField(),
+                  child:Padding(
+                    padding:  EdgeInsets.only(top: 20.h),
+                    child: SizedBox(
+                      height: 45.h,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: "Search",
+                          suffixIcon: const Icon(
+                            Icons.search,
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding:
+                          EdgeInsets.symmetric(vertical: 5.h, horizontal: 12.w),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.r),
+                            borderSide:  BorderSide(color: Colors.black, width: 0.5.w),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.r),
+                            borderSide:  BorderSide(color: Colors.black, width: 0.5.w),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.r),
+                            borderSide:  BorderSide(color: Colors.black, width: 0.5.w),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
+          SizedBox(height: 20.h,),
           Expanded(
             child: Row(
               children: [
                 Container(
                   decoration: BoxDecoration(
-                      color: Colors.grey.shade700,
-                      borderRadius: BorderRadius.circular(12)),
-                  width: size.width * 0.25,
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+                     // color: Colors.grey.shade700,
+                      color: ColorUtils.secondaryColor,
+                      borderRadius: BorderRadius.circular(14.r),),
+                  //width: (size.width * 0.22).w,
+                  width: containerWidth,
+                  padding:  EdgeInsets.symmetric(vertical: 10.h),
                   child: ListView.builder(
                     itemCount: 10,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                        child: _sidebarItem("Burgers", "assets/burger.png"),
+                        padding:  EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
+                        child: SidebarItem(),
                       );
                     },
                   ),
                 ),
-
-                // Main Area
                 Expanded(
-
                   child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CarouselSlider(
-                        options: CarouselOptions(
-                          autoPlayCurve: Curves.fastLinearToSlowEaseIn,
-                          height: 200.0,
-                          autoPlay: true,
-                          enlargeCenterPage: true,
-                          viewportFraction: 0.9,
-                          aspectRatio: 16 / 9,
-                          autoPlayInterval: Duration(seconds: 3),
-                          autoPlayAnimationDuration:
-                              Duration(milliseconds: 800),
-                        ),
-                        items: imageUrls.map((i) {
-                          return Builder(
-                            builder: (BuildContext context) {
-                              return Container(
-                                width: MediaQuery.of(context).size.width,
-                                margin: EdgeInsets.symmetric(horizontal: 4.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Colors.green.withOpacity(0),
-                                  image: DecorationImage(
-                                    image: NetworkImage(i),
-                                  ),
-                                ),
-                                alignment: Alignment.center,
-                              );
-                            },
-                          );
-                        }).toList(),
+                      HomeBannerSlider(
+                        imageAssets: imageAssets,
+                        onTap: (){
+                        print('yyy');
+                      },
                       ),
-                      //HomeBannerSlider(),
-                      //ProductIamgeSlider(),
-
-                      // Category Chips
+                      SizedBox(height: 20.h,),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 6.w),
                         child: SizedBox(
-                          height: 30,
+                          height: 36.h,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: 8,
+                            itemCount: 10,
                             itemBuilder: (context, index) {
-                              return Container(
-                                //height: 20,
-                                margin: EdgeInsets.only(right: 10),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                ),
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                      width: 0.5
-                                    ),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Center(
-                                  child: Text('Halal'),
-                                ),
+                              return TagWidget(
+                                label: 'Halal Food',
                               );
                             },
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
+                      SizedBox(height: 8.h),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 6.w),
                         child: Text(
                           "All Items",
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18.sp, fontWeight: FontWeight.w500),
                         ),
                       ),
-                      const SizedBox(height: 8),
-
-
+                      SizedBox(height: 8.h),
                       Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: GridView.builder(
-                            itemCount: 12,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 18,
-                              crossAxisSpacing: 18,
-                              childAspectRatio: 0.75,
-                            ),
-                            itemBuilder: (context, index) {
-                              return _FoodCard();
-                            },
+                        child: GridView.builder(
+                          itemCount: 20,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            //crossAxisCount: 4,
+                                //crossAxisCount: getCrossAxisCount(context),
+                                crossAxisCount: crossAxisCount,
+                            mainAxisSpacing: 10.h,
+                            crossAxisSpacing: 4.w,
+                            childAspectRatio: 0.76,
                           ),
+                          itemBuilder: (context, index) {
+                            return ItemCard();
+                          },
                         ),
                       ),
+                      OrderCartWidget(
+                        title: "Your Order",
+                        itemCount: 2,
+                        price: 50.50,
+                        onCancel: () {
 
-                      // Bottom Bar
-                      Container(
-                        height: 90,
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 8,
-                              color: Colors.black.withOpacity(0.05),
-                            ),
-                          ],
-                          borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(20)),
-                        ),
-                        child: Row(
-                          children: [
-                            TextButton(
-                              onPressed: () {},
-                              child: const Text(
-                                "Cancel",
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.deepOrange),
-                              ),
-                            ),
-                            const Spacer(),
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: const [
-                                  Text(
-                                    "Your Order",
-                                    style: TextStyle(
-                                        fontSize: 14, color: Colors.grey),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  SizedBox(height: 6),
-                                  Text(
-                                    "2   \$50.50",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.deepOrange,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 24, vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18),
-                                ),
-                              ),
-                              child: const Text("Order",
-                                  style: TextStyle(fontSize: 18)),
-                            ),
-                          ],
-                        ),
+                        },
+                        onOrder: () {
+
+                        },
                       ),
                     ],
                   ),
@@ -247,255 +215,6 @@ class FoodKioskScreen extends StatelessWidget {
           ),
         ],
       )),
-    );
-  }
-
-  Widget _sidebarItem(
-    String title,
-    String imagePath,
-  ) {
-    return GestureDetector(
-      onTap: (){},
-        // child: Column(
-        //   children: [
-        //     ClipRRect(
-        //       borderRadius: BorderRadius.circular(16),
-        //       child: Image.asset(
-        //         imagePath,
-        //         width: double.infinity,
-        //         // width: 10,
-        //         height: 70,
-        //         fit: BoxFit.fill,
-        //       ),
-        //     ),
-        //     const SizedBox(height: 8),
-        //     Text(
-        //       title,
-        //       textAlign: TextAlign.center,
-        //       style: const TextStyle(color: Colors.white, fontSize: 13),
-        //     ),
-        //   ],
-        // ),
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 6,
-                spreadRadius: 0,
-                offset: Offset(2, 2),
-              ),
-            ],
-          ),
-          child:Column(
-            children: [
-              // ClipRRect(
-              //   borderRadius: BorderRadius.circular(16),
-              //   child: Image.asset(
-              //     "assets/pizza.png",
-              //     width: double.infinity,
-              //     fit: BoxFit.fill,
-              //   ),
-              // ),
-              Stack(
-                  children: [
-                    Opacity(
-                      opacity: 0.3,
-                      child: SizedBox(
-                        child:  Image.asset(
-                          "assets/pizza.png",
-                          width: double.infinity,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: -60.w, sigmaY: 0.h),
-                        child: Image.asset(
-                          "assets/pizza.png",
-                          width: double.infinity,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                  ]
-              ),
-              SizedBox(height: 2.h),
-              Text(
-                "Sushi Roll",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                             ),
-            ],
-          ) ,
-        ),
-    );
-  }
-
-
-}
-
-class _Logo extends StatelessWidget {
-  const _Logo();
-
-  @override
-  Widget build(BuildContext context) {
-    return RichText(
-      text: const TextSpan(
-        style: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: Colors.deepOrange,
-        ),
-        children: [
-          TextSpan(text: "3"),
-          TextSpan(
-            text: "DineBase",
-            style: TextStyle(color: Colors.brown),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SearchField extends StatelessWidget {
-  const _SearchField();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 30,
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: "Search",
-          suffixIcon: const Icon(
-            Icons.search,
-          ),
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 5, horizontal: 12),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: const BorderSide(color: Colors.black, width: 0.5),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: const BorderSide(color: Colors.black, width: 0.5),
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: const BorderSide(color: Colors.black, width: 0.5),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _FoodCard extends StatelessWidget {
-  const _FoodCard();
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        print('xx');
-      },
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 6,
-              spreadRadius: 0,
-              offset: Offset(2, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Stack(
-                children: [
-                  Opacity(
-                    opacity: 0.3,
-                    child: SizedBox(
-                      child:  Image.asset(
-                        "assets/pizza.png",
-                        width: double.infinity,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: -60.w, sigmaY: 0.h),
-                      child: Image.asset(
-                        "assets/pizza.png",
-                        width: double.infinity,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                ]
-              ),
-            ),
-            SizedBox(height: 2.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '20 min',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-                Text(
-                  '⭐ 4.5',
-                  style: TextStyle(fontSize: 12, color: Colors.black87),
-                )
-              ],
-            ),
-            const SizedBox(height: 2),
-            const Text(
-              "Sushi Roll",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            const SizedBox(height: 2),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "\$5.50",
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {},
-                  child: Icon(
-                    Icons.add_circle_outline,
-                    size: 15.h,
-                    color: Colors.red,
-                  ),
-                )
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

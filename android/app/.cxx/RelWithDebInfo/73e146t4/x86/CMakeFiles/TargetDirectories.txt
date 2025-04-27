@@ -1,0 +1,2 @@
+E:/sojib/sojib/kiosk/android/app/.cxx/RelWithDebInfo/73e146t4/x86/CMakeFiles/edit_cache.dir
+E:/sojib/sojib/kiosk/android/app/.cxx/RelWithDebInfo/73e146t4/x86/CMakeFiles/rebuild_cache.dir
