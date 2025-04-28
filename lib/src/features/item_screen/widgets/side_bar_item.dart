@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kiosk/utils/color_utils.dart';
+import 'package:kiosk/src/core/utils/color_utils.dart';
 
 class SidebarItem extends StatelessWidget {
   final VoidCallback onTap;
+  final bool isSelected;
   final String title;
   final String image;
 
@@ -11,21 +12,22 @@ class SidebarItem extends StatelessWidget {
       {super.key,
       required this.onTap,
       required this.title,
-      required this.image});
+      required this.image, required this.isSelected});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        //padding: const EdgeInsets.all(10),
+        padding: isSelected?  EdgeInsets.all(3.w): EdgeInsets.all(0.w),
         decoration: BoxDecoration(
-          color: ColorUtils.primaryColor,
-          borderRadius: BorderRadius.circular(14.r),
+          // color: ColorUtils.primaryColor,
+          color: isSelected ? Colors.deepOrange : ColorUtils.primaryColor,
+          borderRadius:  BorderRadius.circular(14.r),
           boxShadow: [
             BoxShadow(
               color: ColorUtils.black.withOpacity(0.2),
-              blurRadius: 6,
+              blurRadius: 6.r,
               spreadRadius: 0,
               offset: Offset(2, 2),
             ),
@@ -47,7 +49,7 @@ class SidebarItem extends StatelessWidget {
             SizedBox(height: 6.h),
             Text(
               title,
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp,color: isSelected?ColorUtils.color1:ColorUtils.black),
             ),
             SizedBox(height: 4.h),
           ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kiosk/utils/color_utils.dart';
+import 'package:kiosk/src/core/utils/color_utils.dart';
 
 class ItemCard extends StatelessWidget {
   final String itemName;

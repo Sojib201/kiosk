@@ -1,26 +1,35 @@
 import 'dart:ui';
-
-import 'package:carousel_slider/carousel_options.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kiosk/utils/color_utils.dart';
-import 'package:kiosk/widgets/home_banner_slider.dart';
-import 'package:kiosk/widgets/item_card.dart';
-import 'package:kiosk/widgets/order_cart_widget.dart';
-import 'package:kiosk/widgets/side_bar_item.dart';
-import 'package:kiosk/widgets/tag_widget.dart';
+import 'package:kiosk/src/core/constants/const_string.dart';
+import 'package:kiosk/src/core/constants/hive_constants.dart';
+import 'package:kiosk/src/core/utils/color_utils.dart';
+import 'package:kiosk/src/data/datasources/local/local_data_source.dart';
+import 'package:kiosk/src/features/item_screen/widgets/home_banner_slider.dart';
+import 'package:kiosk/src/features/item_screen/widgets/item_card.dart';
+import 'package:kiosk/src/features/item_screen/widgets/order_cart_widget.dart';
+import 'package:kiosk/src/features/item_screen/widgets/side_bar_item.dart';
+import 'package:kiosk/src/features/item_screen/widgets/tag_widget.dart';
+import 'package:kiosk/src/features/log_in_screen/login_screen.dart';
 
-import 'main.dart';
+import 'app_drawer/AppDrawer.dart';
+import 'app_drawer/bloc/appdware_bloc.dart';
+
+
 
 class FoodKioskScreen extends StatefulWidget {
-  const FoodKioskScreen({super.key});
+   const FoodKioskScreen({super.key});
+
 
   @override
   State<FoodKioskScreen> createState() => _FoodKioskScreenState();
 }
 
 class _FoodKioskScreenState extends State<FoodKioskScreen> {
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   final List<String> imageAssets = [
     'assets/chowmin.png',
     'assets/pizza.png',
@@ -28,6 +37,7 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
   ];
 
   int selectedIndex = -1;
+  int isSelected = -1;
 
   // int getCrossAxisCount(BuildContext context) {
   //   final deviceWidth = MediaQuery.of(context).size.width;
@@ -39,10 +49,8 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
   //   }
   // }
 
-
   @override
   Widget build(BuildContext context) {
-
 
     // final bool tablet = isTablet();
     // final int crossAxisCount = tablet ? 4 : 2;
@@ -51,14 +59,20 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
     //     : (MediaQuery.of(context).size.width * 0.22).w;
 
     return Scaffold(
+      key: _scaffoldKey,
+      endDrawer: AppDrawer(
+        drawerKey: _scaffoldKey,
+        title: "",
+      ),
+
       body: SafeArea(
           child: Column(
         children: [
           Padding(
-            padding:  EdgeInsets.all(12.h),
+            padding: EdgeInsets.all(12.h),
             child: Row(
-
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 // Expanded(
                 //   flex: 6,
@@ -79,20 +93,16 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                 //     ),
                 //   ),
                 // ),
-                Expanded(
-                  flex: 1,
-                  child: Image.asset(
-                    'assets/3DineBase.png',
-                    fit: BoxFit.scaleDown,
-                    height: 55.h,
-                  ),
+                Image.asset(
+                  ImagerUrl.logo,
+                  fit: BoxFit.scaleDown,
+                  height: 55.h,
                 ),
                 SizedBox(width: 20.w,),
 
                 Expanded(
-                  flex: 3,
                   child:Padding(
-                    padding:  EdgeInsets.only(top: 20.h),
+                    padding:  EdgeInsets.only(top: 24.h),
                     child: SizedBox(
                       height: 45.h,
                       child: TextField(
@@ -122,6 +132,20 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                     ),
                   ),
                 ),
+                SizedBox(
+                  width: 50.w,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 24.h),
+                  child: GestureDetector(
+                    onTap: (){
+                      print('fff');
+                      //Scaffold.of(context).openEndDrawer();
+                      _scaffoldKey.currentState?.openEndDrawer();
+                    },
+                    child: Icon(Icons.menu,size: 45.h,),
+                  ),
+                ),
               ],
             ),
           ),
@@ -136,7 +160,7 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                       borderRadius: BorderRadius.circular(14.r),),
                   //width: (size.width * 0.22).w,
                   //width: containerWidth,
-                  width: (MediaQuery.of(context).size.width * 0.14).w,
+                  width: (MediaQuery.of(context).size.width * 0.15).w,
                   padding:  EdgeInsets.symmetric(vertical: 10.h),
                   child: ListView.builder(
                     itemCount: 10,
@@ -144,7 +168,24 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                       return Padding(
                         padding:  EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
                         child: SidebarItem(
-                          onTap: (){},
+                          isSelected: index == isSelected,
+                          onTap: (){
+                            setState(
+                                  () {
+                                if (isSelected == index) {
+                                  isSelected = -1;
+                                } else {
+                                  isSelected = index;
+                                }
+
+                                if (isSelected != -1) {
+
+                                } else {
+
+                                }
+                              },
+                            );
+                          },
                           title: 'Sushi Roll',
                           image:  "assets/burger1.png",
                         ),

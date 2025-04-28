@@ -3,9 +3,9 @@ import 'package:flutter/material.dart' show Color;
 
 class ColorUtils {
   static Color availabeTableColor = const Color(0xFF49D18F);
+  static Color deepOrange =  Color(0xFFF18C10);
   static Color reservedTableColor = Color(0xFFE13C3C);
   static Color orderedTableColor = const Color.fromARGB(255, 136, 169, 196);
-  // static Color orderedTableColor = Color(0xFFED7A08);
   static Color primaryColor = const Color(0xFFFDFEFF);
   static Color secondaryColor = const Color(0xFF50525F);
   static Color greyColor = const Color(0xFF33363B);

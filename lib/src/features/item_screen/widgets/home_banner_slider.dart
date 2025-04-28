@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kiosk/utils/color_utils.dart';
+import 'package:kiosk/src/core/utils/color_utils.dart';
 
 class HomeBannerSlider extends StatelessWidget {
   final List<String> imageAssets;
@@ -24,7 +24,7 @@ class HomeBannerSlider extends StatelessWidget {
         viewportFraction: 0.8,
         aspectRatio: 16 / 9,
         autoPlayInterval: Duration(seconds: 3),
-        autoPlayAnimationDuration: Duration(seconds: 15),
+        autoPlayAnimationDuration: Duration(seconds: 4),
       ),
       items: imageAssets.map((i) {
         return Builder(

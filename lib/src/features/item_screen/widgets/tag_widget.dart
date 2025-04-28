@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kiosk/utils/color_utils.dart';
-import 'package:kiosk/utils/style.dart';
+import 'package:kiosk/src/core/utils/color_utils.dart';
+import 'package:kiosk/src/core/utils/style.dart';
 
 
 class TagWidget extends StatelessWidget {
@@ -24,9 +24,6 @@ class TagWidget extends StatelessWidget {
           horizontal: 8.w,
         ),
         decoration: BoxDecoration(
-          // color: ColorUtils.primaryColor,
-          // border: Border.all(width: 1.w),
-
             border: Border.all(width: 1.w, color:isSelected?ColorUtils.secondaryColor: ColorUtils.secondaryColor),
             color: isSelected ? ColorUtils.secondaryColor : ColorUtils.primaryColor,
           borderRadius: BorderRadius.circular(14.r),
