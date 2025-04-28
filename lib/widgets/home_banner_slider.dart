@@ -18,13 +18,13 @@ class HomeBannerSlider extends StatelessWidget {
     return CarouselSlider(
       options: CarouselOptions(
         autoPlayCurve: Curves.fastLinearToSlowEaseIn,
-        height: 230.h,
+        height: 240.h,
         autoPlay: true,
         enlargeCenterPage: true,
-        viewportFraction: 0.6,
+        viewportFraction: 0.8,
         aspectRatio: 16 / 9,
         autoPlayInterval: Duration(seconds: 3),
-        autoPlayAnimationDuration: Duration(seconds: 5),
+        autoPlayAnimationDuration: Duration(seconds: 15),
       ),
       items: imageAssets.map((i) {
         return Builder(
