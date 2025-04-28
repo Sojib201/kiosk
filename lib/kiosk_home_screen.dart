@@ -87,6 +87,7 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                     height: 55.h,
                   ),
                 ),
+                SizedBox(width: 20.w,),
 
                 Expanded(
                   flex: 3,
