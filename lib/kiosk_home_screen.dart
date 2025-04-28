@@ -29,15 +29,15 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
 
   int selectedIndex = -1;
 
-  int getCrossAxisCount(BuildContext context) {
-    final deviceWidth = MediaQuery.of(context).size.width;
-
-    if (deviceWidth > 600) {
-      return 4;
-    } else {
-      return 2;
-    }
-  }
+  // int getCrossAxisCount(BuildContext context) {
+  //   final deviceWidth = MediaQuery.of(context).size.width;
+  //
+  //   if (deviceWidth > 600) {
+  //     return 4;
+  //   } else {
+  //     return 2;
+  //   }
+  // }
 
 
   @override
