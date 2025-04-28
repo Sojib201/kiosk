@@ -101,20 +101,20 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                             Icons.search,
                           ),
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: ColorUtils.primaryColor,
                           contentPadding:
                           EdgeInsets.symmetric(vertical: 5.h, horizontal: 12.w),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30.r),
-                            borderSide:  BorderSide(color: Colors.black, width: 0.5.w),
+                            borderSide:  BorderSide(color: ColorUtils.black, width: 0.5.w),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30.r),
-                            borderSide:  BorderSide(color: Colors.black, width: 0.5.w),
+                            borderSide:  BorderSide(color:ColorUtils.black, width: 0.5.w),
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30.r),
-                            borderSide:  BorderSide(color: Colors.black, width: 0.5.w),
+                            borderSide:  BorderSide(color: ColorUtils.black, width: 0.5.w),
                           ),
                         ),
                       ),

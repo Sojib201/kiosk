@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiosk/utils/color_utils.dart';
 
 class HomeBannerSlider extends StatelessWidget {
   final List<String> imageAssets;
@@ -34,7 +35,7 @@ class HomeBannerSlider extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30.r),
-                  color: Colors.black,
+                  color: ColorUtils.black,
                   image: DecorationImage(
                     fit: BoxFit.fill,
                     image: AssetImage(i),

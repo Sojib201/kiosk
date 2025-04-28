@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiosk/utils/color_utils.dart';
 
 class SidebarItem extends StatelessWidget {
   final VoidCallback onTap;
@@ -19,11 +20,11 @@ class SidebarItem extends StatelessWidget {
       child: Container(
         //padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: ColorUtils.primaryColor,
           borderRadius: BorderRadius.circular(14.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: ColorUtils.black.withOpacity(0.2),
               blurRadius: 6,
               spreadRadius: 0,
               offset: Offset(2, 2),

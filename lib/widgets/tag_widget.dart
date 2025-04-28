@@ -32,7 +32,7 @@ class TagWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(14.r),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: ColorUtils.black.withOpacity(0.2),
                 blurRadius: 6.r,
                 spreadRadius: 0,
                 offset: Offset(-1, -1),

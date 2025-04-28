@@ -30,7 +30,7 @@ class OrderCartWidget extends StatelessWidget {
         color: ColorUtils.color1,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: ColorUtils.black.withOpacity(0.2),
             blurRadius: 8.r,
             spreadRadius: 0,
             offset: Offset(2, 2),
@@ -69,7 +69,7 @@ class OrderCartWidget extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: ColorUtils.black,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -78,11 +78,11 @@ class OrderCartWidget extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 14.r,
-                        backgroundColor: Colors.grey,
+                        backgroundColor: ColorUtils.secondaryColor,
                         child: Center(
                           child: Text(
                             itemCount.toString(),
-                            style: TextStyle(fontSize: 16.sp),
+                            style: TextStyle(fontSize: 15.sp,color: ColorUtils.primaryColor),
                           ),
                         ),
                       ),
@@ -111,7 +111,7 @@ class OrderCartWidget extends StatelessWidget {
                 ),
                 child: Text(
                   "Order",
-                  style: TextStyle(fontSize: 22.sp, color: Colors.white),
+                  style: TextStyle(fontSize: 22.sp, color: ColorUtils.primaryColor),
                 ),
               ),
             ],

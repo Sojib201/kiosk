@@ -33,7 +33,7 @@ class ItemCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(14.r),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: ColorUtils.black.withOpacity(0.2),
                 blurRadius: 6.r,
                 spreadRadius: 0,
                 offset: Offset(2, 2),
@@ -85,18 +85,18 @@ class ItemCard extends StatelessWidget {
                 children: [
                   Text(
                     time,
-                    style: TextStyle(fontSize: 12.sp, color: Colors.black87),
+                    style: TextStyle(fontSize: 12.sp, color: ColorUtils.black),
                   ),
                   Text(
                     ratings,
-                    style: TextStyle(fontSize: 12.sp, color: Colors.black87),
+                    style: TextStyle(fontSize: 12.sp, color: ColorUtils.black),
                   )
                 ],
               ),
               SizedBox(height: 2.h),
               Text(
                 itemName,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.sp),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.sp,color: ColorUtils.black),
               ),
               SizedBox(height: 2.h),
               Row(
@@ -107,7 +107,7 @@ class ItemCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 17.sp,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: ColorUtils.black,
                     ),
                   ),
                   InkWell(
@@ -115,7 +115,7 @@ class ItemCard extends StatelessWidget {
                     child: Icon(
                       Icons.add_circle_outline,
                       size: 24.h,
-                      color: Colors.red,
+                      color: ColorUtils.redColor,
                     ),
                   )
                 ],
