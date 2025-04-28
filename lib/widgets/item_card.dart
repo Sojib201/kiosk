@@ -3,7 +3,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiosk/utils/color_utils.dart';
 
 class ItemCard extends StatelessWidget {
-  const ItemCard();
+  final String itemName;
+  final String time;
+  final String ratings;
+  final String price;
+  final String image;
+
+  const ItemCard(
+      {super.key,
+      required this.itemName,
+      required this.time,
+      required this.ratings,
+      required this.price,
+      required this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -12,9 +24,10 @@ class ItemCard extends StatelessWidget {
         print('xx');
       },
       child: Padding(
-        padding:  EdgeInsets.symmetric(horizontal: 6.w),
+        padding: EdgeInsets.symmetric(horizontal: 6.w),
         child: Container(
-          padding:  EdgeInsets.only(top: 6.h,left: 6.w,right: 6.w,bottom: 7.h),
+          padding:
+              EdgeInsets.only(top: 6.h, left: 6.w, right: 6.w, bottom: 7.h),
           decoration: BoxDecoration(
             color: ColorUtils.primaryColor,
             borderRadius: BorderRadius.circular(14.r),
@@ -60,7 +73,7 @@ class ItemCard extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(14.r),
                   child: Image.asset(
-                    "assets/grilledsteak.png",
+                    image,
                     width: double.infinity,
                     fit: BoxFit.fill,
                   ),
@@ -71,18 +84,18 @@ class ItemCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '20 min',
+                    time,
                     style: TextStyle(fontSize: 12.sp, color: Colors.black87),
                   ),
                   Text(
-                    '⭐ 4.5',
+                    ratings,
                     style: TextStyle(fontSize: 12.sp, color: Colors.black87),
                   )
                 ],
               ),
               SizedBox(height: 2.h),
               Text(
-                "Sushi Roll",
+                itemName,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.sp),
               ),
               SizedBox(height: 2.h),
@@ -90,7 +103,7 @@ class ItemCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "\$5.50",
+                    price,
                     style: TextStyle(
                       fontSize: 17.sp,
                       fontWeight: FontWeight.bold,

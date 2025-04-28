@@ -27,13 +27,15 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
     'assets/burger1.jpg',
   ];
 
+  int selectedIndex = -1;
+
   int getCrossAxisCount(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
 
     if (deviceWidth > 600) {
-      return 4; // Tablet
+      return 4;
     } else {
-      return 2; // Phone
+      return 2;
     }
   }
 
@@ -140,7 +142,11 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding:  EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
-                        child: SidebarItem(),
+                        child: SidebarItem(
+                          onTap: (){},
+                          title: 'Sushi Roll',
+                          image:  "assets/burger1.png",
+                        ),
                       );
                     },
                   ),
@@ -160,11 +166,30 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                         padding: EdgeInsets.symmetric(horizontal: 6.w),
                         child: SizedBox(
                           height: 36.h,
+                          width:double.infinity,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: 10,
                             itemBuilder: (context, index) {
                               return TagWidget(
+                                isSelected: index == selectedIndex,
+                                onTap: (){
+                                  setState(
+                                        () {
+                                      if (selectedIndex == index) {
+                                        selectedIndex = -1;
+                                      } else {
+                                        selectedIndex = index;
+                                      }
+
+                                      if (selectedIndex != -1) {
+
+                                      } else {
+
+                                      }
+                                    },
+                                  );
+                                },
                                 label: 'Halal Food',
                               );
                             },
@@ -194,7 +219,7 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                             childAspectRatio: 0.76,
                           ),
                           itemBuilder: (context, index) {
-                            return ItemCard();
+                            return ItemCard(itemName:"Sushi Roll", time: '20 min', ratings: '⭐ 4.5', price: "\$5.50", image:"assets/grilledsteak.png",);
                           },
                         ),
                       ),
