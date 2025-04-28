@@ -43,7 +43,7 @@ class TagWidget extends StatelessWidget {
           child: Text(
             label,
             // style: TextStyle(fontWeight: FontWeight.w500),
-            style: isSelected ? MyStyle.heading1.copyWith(fontSize: 24.sp) : MyStyle.heading1.copyWith(color: ColorUtils.black,fontSize: 24.sp),
+            style: isSelected ? MyStyle.heading1.copyWith(fontSize: 18.sp) : MyStyle.heading1.copyWith(color: ColorUtils.black,fontSize: 18.sp),
           ),
         ),
       ),

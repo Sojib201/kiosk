@@ -203,7 +203,7 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                         child: Text(
                           "All Items",
                           style: TextStyle(
-                              fontSize: 18.sp, fontWeight: FontWeight.w500),
+                              fontSize: 22.sp, fontWeight: FontWeight.w500),
                         ),
                       ),
                       SizedBox(height: 8.h),
