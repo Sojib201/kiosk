@@ -32,8 +32,12 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
 
   final List<String> imageAssets = [
     'assets/chowmin.png',
-    'assets/pizza.png',
+    //'assets/pizza.png',
     'assets/burger1.jpg',
+    'assets/banner1.jpg',
+    'assets/banner2.png',
+    'assets/banner3.png',
+    'assets/banner4.png',
   ];
 
   int selectedIndex = -1;

@@ -24,8 +24,8 @@ class TagWidget extends StatelessWidget {
           horizontal: 8.w,
         ),
         decoration: BoxDecoration(
-            border: Border.all(width: 1.w, color:isSelected?ColorUtils.secondaryColor: ColorUtils.secondaryColor),
-            color: isSelected ? ColorUtils.secondaryColor : ColorUtils.primaryColor,
+            border: Border.all(width: 1.w, color:isSelected?ColorUtils.deepOrange: ColorUtils.secondaryColor),
+            color: isSelected ? Colors.deepOrange : ColorUtils.primaryColor,
           borderRadius: BorderRadius.circular(14.r),
             boxShadow: [
               BoxShadow(
