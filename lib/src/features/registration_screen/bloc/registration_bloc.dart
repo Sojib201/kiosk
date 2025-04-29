@@ -37,6 +37,14 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
             await HiveOperation().addrestData(true, HiveBoxKeys.isDeviceSetUP);
             emit(RegistrationSuccess());
           } else {
+            if(data['message'].toString()=="Device already exists")
+            {
+              log("device exists and data saved to hive",name: "device exists");
+              await HiveOperation().addrestData(event.cid, HiveBoxKeys.cid);
+              await HiveOperation().addrestData(event.branchId, HiveBoxKeys.branchID);
+              await HiveOperation().addrestData(event.deviceId, HiveBoxKeys.deviceId);
+              await HiveOperation().addrestData(true, HiveBoxKeys.isDeviceSetUP);
+            }
 
             emit(RegistrationFailure(data['message']));
           }

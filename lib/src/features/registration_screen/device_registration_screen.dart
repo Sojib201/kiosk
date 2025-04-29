@@ -185,7 +185,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width / 3,
-                        height: 80.h,
+                        height: 65.h,
                         decoration: BoxDecoration(
                           color: Colors.deepOrange,
                           borderRadius: BorderRadius.circular(28.r),
@@ -193,7 +193,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         child: Center(
                           child: Text(
                             'Device Setup',
-                            style: TextStyle(letterSpacing: 2.sp, fontSize: 30.sp, fontWeight: FontWeight.w500, color: ColorUtils.primaryColor),
+                            style: TextStyle(letterSpacing: 2.sp, fontSize: 27.sp, fontWeight: FontWeight.w500, color: ColorUtils.primaryColor),
                           ),
                         ),
                       ),
