@@ -46,7 +46,6 @@ class MyApp extends StatelessWidget {
         splitScreenMode: true,
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          //initialRoute: '/',
           title: 'Kiosk',
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
