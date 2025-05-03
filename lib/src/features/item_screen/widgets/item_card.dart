@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiosk/src/core/shared/common/common_function.dart';
 import 'package:kiosk/src/core/utils/color_utils.dart';
+
+import 'cached_network_widget.dart';
 
 class ItemCard extends StatelessWidget {
   final String itemName;
   final String time;
   final String ratings;
   final String price;
-  final String image;
-
+  final String imageUrl;
+  final VoidCallback onTap;
   const ItemCard(
       {super.key,
       required this.itemName,
       required this.time,
       required this.ratings,
       required this.price,
-      required this.image});
+      required this.imageUrl, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        print('xx');
-      },
+      onTap: onTap,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 6.w),
         child: Container(
@@ -72,10 +73,16 @@ class ItemCard extends StatelessWidget {
                 // )1
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(14.r),
-                  child: Image.asset(
-                    image,
-                    width: double.infinity,
-                    fit: BoxFit.fill,
+                  child:
+                  // Image.asset(
+                  //   image,
+                  //   width: double.infinity,
+                  //   fit: BoxFit.fill,
+                  // ),
+                  ImageShow(
+                    imageUrl: CommonFunction().makeImageUrl(imageUrl),
+                    isLocal: imageUrl.isNotEmpty,
+                    //fit: BoxFit.fill,
                   ),
                 ),
               ),
@@ -96,7 +103,9 @@ class ItemCard extends StatelessWidget {
               SizedBox(height: 2.h),
               Text(
                 itemName,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.sp,color: ColorUtils.black),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.sp,color: ColorUtils.black,),
               ),
               SizedBox(height: 2.h),
               Row(

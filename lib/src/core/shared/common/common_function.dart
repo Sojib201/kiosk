@@ -38,6 +38,10 @@ class CommonFunction {
     }
   }
 
+  String makeImageUrl(String itemeID) {
+    return "/data/user/0/com.example.dinebaselatest/app_flutter/$itemeID.png";
+  }
+
   Future<String?> getId() async {
     var deviceInfo = DeviceInfoPlugin();
     if (Platform.isIOS) {

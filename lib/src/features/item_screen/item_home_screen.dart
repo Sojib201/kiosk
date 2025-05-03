@@ -1,11 +1,15 @@
+import 'dart:developer';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kiosk/src/core/constants/const_string.dart';
 import 'package:kiosk/src/core/constants/hive_constants.dart';
 import 'package:kiosk/src/core/utils/color_utils.dart';
 import 'package:kiosk/src/data/datasources/local/local_data_source.dart';
+import 'package:kiosk/src/data/models/settings_mode.dart';
+import 'package:kiosk/src/features/item_screen/bloc/item_screen_bloc.dart';
 import 'package:kiosk/src/features/item_screen/widgets/home_banner_slider.dart';
 import 'package:kiosk/src/features/item_screen/widgets/item_card.dart';
 import 'package:kiosk/src/features/item_screen/widgets/order_cart_widget.dart';
@@ -29,6 +33,9 @@ class FoodKioskScreen extends StatefulWidget {
 class _FoodKioskScreenState extends State<FoodKioskScreen> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  List<ItemList> itemList = [];
+  AllSettings? allSettings;
+  TextEditingController _searchingController = TextEditingController();
 
   final List<String> imageAssets = [
     'assets/chowmin.png',
@@ -52,6 +59,20 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
   //     return 2;
   //   }
   // }
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    //context.read<CategorycuisinBloc>().add(CategorycuisinloadedEvent(allSettings: widget.allSettings, isCat: true, isFood: true));
+    context.read<ItemScreenBloc>().add(
+      SearchItemEvent(allSettings!.category!.first.categoryList!.first.categoryName!, allSettings!.itemList ?? []),
+    );
+    //context.read<OrderBloc>().add(AddOrderItem({}));
+
+    context.read<ItemScreenBloc>().add(GetAllResturantData(false),);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,11 +131,45 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                     child: SizedBox(
                       height: 45.h,
                       child: TextField(
+                        controller: _searchingController,
+                        onChanged: (query) {
+                          context.read<ItemScreenBloc>().add(SearchingEvent(query, allSettings!.itemList!));
+
+                          if (query.isEmpty) {
+                            context.read<ItemScreenBloc>().add(
+                              SearchItemEvent(
+                                //allSettings?.category.first.categoryList!.first.categoryName!!,
+                                allSettings!.category!.first.categoryList!.first.categoryName!,
+                                allSettings!.itemList ?? [],
+                              ),
+                            );
+                          }
+                        },
                         decoration: InputDecoration(
-                          hintText: "Search",
-                          suffixIcon: const Icon(
-                            Icons.search,
+                          suffixIcon: IconButton(
+                            padding: EdgeInsets.only(right: 10.w, bottom: 2.h, top: 3.h),
+                            onPressed: () {
+                              _searchingController.clear();
+                              _searchingController.addListener(() {
+                                context.read<ItemScreenBloc>().add(
+                                  SearchItemEvent(allSettings!.category!.first.categoryList!.first.categoryName!, allSettings!.itemList ?? []),
+                                );
+                              });
+                              context.read<ItemScreenBloc>().add(SearchingEvent("", allSettings!.itemList!));
+                              context.read<ItemScreenBloc>().add(
+                                SearchItemEvent(allSettings!.category!.first.categoryList!.first.categoryName!, allSettings!.itemList ?? []),
+                              );
+                            },
+                            icon: Icon(
+                              Icons.cancel_outlined,
+                              color: ColorUtils.secondaryColor,
+                            ),
                           ),
+
+                          hintText: "Search",
+                          // suffixIcon: const Icon(
+                          //   Icons.search,
+                          // ),
                           filled: true,
                           fillColor: ColorUtils.primaryColor,
                           contentPadding:
@@ -253,21 +308,134 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                       ),
                       SizedBox(height: 8.h),
                       Expanded(
-                        child: GridView.builder(
-                          itemCount: 20,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4,
-                                //crossAxisCount: getCrossAxisCount(context),
-                                //crossAxisCount: crossAxisCount,
-                            mainAxisSpacing: 10.h,
-                            crossAxisSpacing: 4.w,
-                            childAspectRatio: 0.76,
-                          ),
-                          itemBuilder: (context, index) {
-                            return ItemCard(itemName:"Sushi Roll", time: '20 min', ratings: '⭐ 4.5', price: "\$5.50", image:"assets/grilledsteak.png",);
-                          },
-                        ),
+                        child: BlocBuilder<ItemScreenBloc,ItemScreenState>(
+                          // listener: (context, state) {
+                          //   if (state is OrderSubmittedSuccessState) {
+                          //     log("333333333333333333333333333388888888888888888888234324324");
+                          //     context.read<ItemScreenBloc>().add(GetAllResturantData( false));
+                          //     Fluttertoast.showToast(msg: state.message);
+                          //
+                          //     // context.pop(context);
+                          //     Navigator.pop(context);
+                          //   }
+                          //   if (state is ErrorState) {
+                          //     context.read<ItemScreenBloc>().add(
+                          //       SearchItemEvent(allSettings!.category!.first.categoryList!.first.categoryName!, allSettings!.itemList ?? []),
+                          //     );
+                          //   }
+                          //
+                          //   // TODO: implement listener
+                          // },
+                          builder: (context, state) {
+                          if(state is ItemSearchLoading){
+                            return Center(child: CircularProgressIndicator(),);
+                          }
+                          if(state is ItemSearchResult){
+                            if (state.filteredItems.isEmpty) {
+                              return const Center(child: Text('No Items Found'));
+                            }
+                            else{
+                              itemList = state.filteredItems;
+                              return GridView.builder(
+                                itemCount: state.filteredItems.length,
+                                gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 4,
+                                  //crossAxisCount: getCrossAxisCount(context),
+                                  //crossAxisCount: crossAxisCount,
+                                  mainAxisSpacing: 10.h,
+                                  crossAxisSpacing: 4.w,
+                                  childAspectRatio: 0.76,
+                                ),
+                                itemBuilder: (context, index) {
+                                  ItemList item = state.filteredItems[index];
+                                  return ItemCard(
+                                    onTap: () {
+
+                                    },
+                                      itemName: item.foodName!,
+                                      time: '20 min',
+                                      ratings: '⭐ 4.5',
+                                      price:  item.foodPortions!.isNotEmpty ? item.foodPortions!.first.portionPrice!.toString() : item.unitPrice.toString(),
+                                      imageUrl: item.imageUrl!.isEmpty ? "" : item.foodId!,
+                                    );
+                                  },
+                              );
+                            }
+                          }
+                          // if(state is ItemLoadedSearched){
+                          //   if (state.items.isEmpty) {
+                          //   return const Center(
+                          //     child: Text('No Item Found'),
+                          //   );
+                          // }
+                          // else{
+                          //     itemList = state.items;
+                          //   return GridView.builder(
+                          //     itemCount: state.items.length,
+                          //     gridDelegate:
+                          //     SliverGridDelegateWithFixedCrossAxisCount(
+                          //       crossAxisCount: 4,
+                          //       //crossAxisCount: getCrossAxisCount(context),
+                          //       //crossAxisCount: crossAxisCount,
+                          //       mainAxisSpacing: 10.h,
+                          //       crossAxisSpacing: 4.w,
+                          //       childAspectRatio: 0.76,
+                          //     ),
+                          //     itemBuilder: (context, index) {
+                          //       ItemList itemmodel = state.items[index];
+                          //           return ItemCard(
+                          //             onTap: (){},
+                          //             itemName: itemmodel.foodName!,
+                          //             time: '20 min',
+                          //             ratings: '⭐ 4.5',
+                          //             price: itemmodel.foodPortions!.isNotEmpty ? itemmodel.foodPortions!.first.portionPrice!.toString() : itemmodel.unitPrice.toString(),
+                          //             imageUrl: itemmodel.imageUrl!.isEmpty ? "" : itemmodel.foodId!,
+                          //           );
+                          //         },
+                          //   );
+                          // }
+                          // }
+                          print('state is: $ItemDataLoadedState');
+                          if(state is ItemDataLoadedState){
+                            if(state.allSettings.itemList!.isEmpty){
+                              return const Center(child: Text('No Item Found'),);
+                            }
+                            else
+                              {
+                                itemList = state.allSettings.itemList!;
+                                return GridView.builder(
+                                  itemCount: state.allSettings.itemList!.length,
+                                  gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 4,
+                                    //crossAxisCount: getCrossAxisCount(context),
+                                    //crossAxisCount: crossAxisCount,
+                                    mainAxisSpacing: 10.h,
+                                    crossAxisSpacing: 4.w,
+                                    childAspectRatio: 0.76,
+                                  ),
+                                  itemBuilder: (context, index) {
+                                    ItemList itemmodel = state.allSettings.itemList![index];
+                                    return ItemCard(
+                                      onTap: (){},
+                                      itemName: itemmodel.foodName!,
+                                      time: '20 min',
+                                      ratings: '⭐ 4.5',
+                                      price: itemmodel.foodPortions!.isNotEmpty ? itemmodel.foodPortions!.first.portionPrice!.toString() : itemmodel.unitPrice.toString(),
+                                      imageUrl: itemmodel.imageUrl!.isEmpty ? "" : itemmodel.foodId!,
+                                    );
+                                  },
+                                );
+
+                              }
+                          }
+                          else {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        }, ),
                       ),
                       OrderCartWidget(
                         title: "Your Order",
@@ -287,7 +455,7 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
             ),
           ),
         ],
-      )),
+      ),),
     );
   }
 }
