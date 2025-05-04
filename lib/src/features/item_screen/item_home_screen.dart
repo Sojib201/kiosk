@@ -10,10 +10,12 @@ import 'package:kiosk/src/core/utils/color_utils.dart';
 import 'package:kiosk/src/data/datasources/local/local_data_source.dart';
 import 'package:kiosk/src/data/models/settings_mode.dart';
 import 'package:kiosk/src/features/item_screen/bloc/item_screen_bloc.dart';
+import 'package:kiosk/src/features/item_screen/widgets/catagory_cuisin/bloc/category_bloc.dart';
+import 'package:kiosk/src/features/item_screen/widgets/catagory_cuisin/category_widget.dart';
 import 'package:kiosk/src/features/item_screen/widgets/home_banner_slider.dart';
 import 'package:kiosk/src/features/item_screen/widgets/item_card.dart';
 import 'package:kiosk/src/features/item_screen/widgets/order_cart_widget.dart';
-import 'package:kiosk/src/features/item_screen/widgets/side_bar_item.dart';
+import 'package:kiosk/src/features/item_screen/widgets/category_item_widget.dart';
 import 'package:kiosk/src/features/item_screen/widgets/tag_widget.dart';
 import 'package:kiosk/src/features/log_in_screen/login_screen.dart';
 
@@ -47,7 +49,9 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
     'assets/banner4.png',
   ];
 
-  int selectedIndex = -1;
+  List<int> selectedIndex = [];
+
+
   int isSelected = -1;
 
   // int getCrossAxisCount(BuildContext context) {
@@ -65,10 +69,10 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
   void initState() {
     super.initState();
 
-    //context.read<CategorycuisinBloc>().add(CategorycuisinloadedEvent(allSettings: widget.allSettings, isCat: true, isFood: true));
-    context.read<ItemScreenBloc>().add(
-      SearchItemEvent(allSettings!.category!.first.categoryList!.first.categoryName!, allSettings!.itemList ?? []),
-    );
+    // context.read<CategorycuisinBloc>().add(CategorycuisinloadedEvent(allSettings: widget.allSettings, isCat: true, isFood: true));
+    // context.read<ItemScreenBloc>().add(
+    //   SearchItemEvent(allSettings!.category!.first.categoryList!.first.categoryName!, allSettings!.itemList ?? []),
+    // );
     //context.read<OrderBloc>().add(AddOrderItem({}));
 
     context.read<ItemScreenBloc>().add(GetAllResturantData(false),);
@@ -89,7 +93,6 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
         drawerKey: _scaffoldKey,
         title: "",
       ),
-
       body: SafeArea(
           child: Column(
         children: [
@@ -99,32 +102,12 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                // Expanded(
-                //   flex: 6,
-                //   child:RichText(
-                //     text:  TextSpan(
-                //       style: TextStyle(
-                //         fontSize: 30.sp,
-                //         fontWeight: FontWeight.bold,
-                //         color: Colors.deepOrange,
-                //       ),
-                //       children: [
-                //         TextSpan(text: "3"),
-                //         TextSpan(
-                //           text: "DineBase",
-                //           style: TextStyle(color: Colors.brown),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
                 Image.asset(
                   ImagerUrl.logo,
                   fit: BoxFit.scaleDown,
                   height: 55.h,
                 ),
                 SizedBox(width: 20.w,),
-
                 Expanded(
                   child:Padding(
                     padding:  EdgeInsets.only(top: 24.h),
@@ -132,6 +115,20 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                       height: 45.h,
                       child: TextField(
                         controller: _searchingController,
+                        // onChanged: (query) {
+                        //   context.read<ItemScreenBloc>().add(SearchingEvent(query, allSettings?.itemList??[]));
+                        //   print('query:$query');
+                        //
+                        //   if (query.isEmpty) {
+                        //     context.read<ItemScreenBloc>().add(
+                        //       SearchItemEvent(
+                        //         //allSettings?.category.first.categoryList!.first.categoryName!!,
+                        //         allSettings?.category!.first.categoryList!.first.categoryName??'',
+                        //         allSettings!.itemList ?? [],
+                        //       ),
+                        //     );
+                        //   }
+                        // },
                         onChanged: (query) {
                           context.read<ItemScreenBloc>().add(SearchingEvent(query, allSettings!.itemList!));
 
@@ -212,46 +209,16 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
           Expanded(
             child: Row(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                     // color: Colors.grey.shade700,
-                      color: ColorUtils.secondaryColor,
-                      borderRadius: BorderRadius.circular(14.r),),
-                  //width: (size.width * 0.22).w,
-                  //width: containerWidth,
-                  width: (MediaQuery.of(context).size.width * 0.15).w,
-                  padding:  EdgeInsets.symmetric(vertical: 10.h),
-                  child: ListView.builder(
-                    itemCount: 10,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding:  EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
-                        child: SidebarItem(
-                          isSelected: index == isSelected,
-                          onTap: (){
-                            setState(
-                                  () {
-                                if (isSelected == index) {
-                                  isSelected = -1;
-                                } else {
-                                  isSelected = index;
-                                }
-
-                                if (isSelected != -1) {
-
-                                } else {
-
-                                }
-                              },
-                            );
-                          },
-                          title: 'Sushi Roll',
-                          image:  "assets/burger1.png",
-                        ),
+                BlocBuilder<ItemScreenBloc, ItemScreenState>(
+                  builder: (context, state) {
+                    if(state is ItemDataLoadedState){
+                      return CategoryWidget(
+                        allSettings: state.allSettings,
                       );
+                      }
+                    return Text("Empty");
                     },
                   ),
-                ),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,40 +230,78 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                       },
                       ),
                       SizedBox(height: 20.h,),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 6.w),
-                        child: SizedBox(
-                          height: 36.h,
-                          width:double.infinity,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: 10,
-                            itemBuilder: (context, index) {
-                              return TagWidget(
-                                isSelected: index == selectedIndex,
-                                onTap: (){
-                                  setState(
-                                        () {
-                                      if (selectedIndex == index) {
-                                        selectedIndex = -1;
-                                      } else {
-                                        selectedIndex = index;
-                                      }
+                      BlocBuilder<ItemScreenBloc, ItemScreenState>(
+                          builder: (context, state) {
+                            if(state is ItemDataLoadedState){
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 6.w),
+                                child: SizedBox(
+                                  height: 36.h,
+                                  width:double.infinity,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: state.allSettings.tagsList!.length,
+                                    itemBuilder: (context, index) {
+                                      return TagWidget(
+                                        // isSelected: index == selectedIndex,
+                                        isSelected: selectedIndex.contains(index),
+                                        // onTap: (){
+                                        //   setState(
+                                        //         () {
+                                        //       if (selectedIndex == index) {
+                                        //         selectedIndex = -1;
+                                        //       } else {
+                                        //         selectedIndex = index;
+                                        //       }
+                                        //
+                                        //       if (selectedIndex != -1) {
+                                        //
+                                        //       } else {
+                                        //
+                                        //       }
+                                        //     },
+                                        //   );
+                                        // },
+                                        onTap: () {
+                                          setState(() {
+                                            if (selectedIndex.contains(index)) {
+                                              selectedIndex.remove(index);
+                                            } else {
+                                              selectedIndex.add(index);
+                                            }
 
-                                      if (selectedIndex != -1) {
+                                            if (selectedIndex.isNotEmpty) {
+                                              final selectedTags = selectedIndex.map((i) {
+                                                return state.allSettings.tagsList![i].tagName.toString();
+                                              }).toList();
 
-                                      } else {
-
-                                      }
+                                              // context.read<ItemScreenBloc>().add(
+                                              //   SearchingTag(
+                                              //     selectedTags,
+                                              //     state.allSettings.itemList!,
+                                              //   ),
+                                              // );
+                                            } else {
+                                              // context.read<ItemScreenBloc>().add(
+                                              //   SearchItemEvent(
+                                              //     state.allSettings.category!.first.categoryList!.first.categoryName!,
+                                              //     state.allSettings.itemList ?? [],
+                                              //   ),
+                                              // );
+                                            }
+                                          });
+                                        },
+                                        label: state.allSettings.tagsList![index].tagName.toString(),
+                                      );
                                     },
-                                  );
-                                },
-                                label: 'Halal Food',
+                                  ),
+                                ),
                               );
-                            },
-                          ),
+                            }
+                            return Text("Empty");
+
+                          },
                         ),
-                      ),
                       SizedBox(height: 8.h),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 6.w),
@@ -327,10 +332,12 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                           //   // TODO: implement listener
                           // },
                           builder: (context, state) {
+                            
                           if(state is ItemSearchLoading){
                             return Center(child: CircularProgressIndicator(),);
                           }
                           if(state is ItemSearchResult){
+                            print('ItemSearchResult: ${state.filteredItems}');
                             if (state.filteredItems.isEmpty) {
                               return const Center(child: Text('No Items Found'));
                             }
@@ -363,41 +370,42 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                               );
                             }
                           }
-                          // if(state is ItemLoadedSearched){
-                          //   if (state.items.isEmpty) {
-                          //   return const Center(
-                          //     child: Text('No Item Found'),
-                          //   );
-                          // }
-                          // else{
-                          //     itemList = state.items;
-                          //   return GridView.builder(
-                          //     itemCount: state.items.length,
-                          //     gridDelegate:
-                          //     SliverGridDelegateWithFixedCrossAxisCount(
-                          //       crossAxisCount: 4,
-                          //       //crossAxisCount: getCrossAxisCount(context),
-                          //       //crossAxisCount: crossAxisCount,
-                          //       mainAxisSpacing: 10.h,
-                          //       crossAxisSpacing: 4.w,
-                          //       childAspectRatio: 0.76,
-                          //     ),
-                          //     itemBuilder: (context, index) {
-                          //       ItemList itemmodel = state.items[index];
-                          //           return ItemCard(
-                          //             onTap: (){},
-                          //             itemName: itemmodel.foodName!,
-                          //             time: '20 min',
-                          //             ratings: '⭐ 4.5',
-                          //             price: itemmodel.foodPortions!.isNotEmpty ? itemmodel.foodPortions!.first.portionPrice!.toString() : itemmodel.unitPrice.toString(),
-                          //             imageUrl: itemmodel.imageUrl!.isEmpty ? "" : itemmodel.foodId!,
-                          //           );
-                          //         },
-                          //   );
-                          // }
-                          // }
-                          print('state is: $ItemDataLoadedState');
+                          if(state is ItemLoadedSearched){
+                            if (state.items.isEmpty) {
+                            return const Center(
+                              child: Text('No Item Found'),
+                            );
+                          }
+                          else{
+                              itemList = state.items;
+                            return GridView.builder(
+                              itemCount: state.items.length,
+                              gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 4,
+                                //crossAxisCount: getCrossAxisCount(context),
+                                //crossAxisCount: crossAxisCount,
+                                mainAxisSpacing: 10.h,
+                                crossAxisSpacing: 4.w,
+                                childAspectRatio: 0.76,
+                              ),
+                              itemBuilder: (context, index) {
+                                ItemList itemmodel = state.items[index];
+                                    return ItemCard(
+                                      onTap: (){},
+                                      itemName: itemmodel.foodName!,
+                                      time: '20 min',
+                                      ratings: '⭐ 4.5',
+                                      price: itemmodel.foodPortions!.isNotEmpty ? itemmodel.foodPortions!.first.portionPrice!.toString() : itemmodel.unitPrice.toString(),
+                                      imageUrl: itemmodel.imageUrl!.isEmpty ? "" : itemmodel.foodId!,
+                                    );
+                                  },
+                            );
+                          }
+                          }
                           if(state is ItemDataLoadedState){
+                            context.read<CategoryBloc>().add(CategoryLoadedEvent(allSettings: state.allSettings,));
+                            print('Item: ${state.allSettings.itemList}');
                             if(state.allSettings.itemList!.isEmpty){
                               return const Center(child: Text('No Item Found'),);
                             }

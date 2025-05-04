@@ -25,7 +25,6 @@ class ItemScreenBloc extends Bloc<ItemScreenEvent, ItemScreenState> {
       // print('event list : ${event.items.toList()}');
       if (event.items.isNotEmpty) {
         User loginInfo = userFromJson(await HiveOperation().getData(HiveBoxKeys.userInfo));
-        log(jsonEncode(loginInfo), name: "Log_in -Info");
         final List<ItemList> items = event.items.where((element) => element.categories!.contains(event.searchItem) || element.cuisines!.contains(event.searchItem)).toList();
         emit(ItemLoadedSearched(items, loginInfo.restaurantInfo!.currencySymbol!));
       } else {

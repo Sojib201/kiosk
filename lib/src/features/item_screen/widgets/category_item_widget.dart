@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiosk/src/core/shared/common/common_function.dart';
 import 'package:kiosk/src/core/utils/color_utils.dart';
 
-class SidebarItem extends StatelessWidget {
+import 'cached_network_widget.dart';
+
+class CategoryItemWidget extends StatelessWidget {
   final VoidCallback onTap;
   final bool isSelected;
-  final String title;
-  final String image;
+  final String categoryName;
+  final String imageUrl;
 
-  const SidebarItem(
+  const CategoryItemWidget(
       {super.key,
       required this.onTap,
-      required this.title,
-      required this.image, required this.isSelected});
+      required this.categoryName,
+      required this.imageUrl, required this.isSelected});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: isSelected?  EdgeInsets.all(3.w): EdgeInsets.all(0.w),
+        padding:  EdgeInsets.symmetric(horizontal: 3.w),
         decoration: BoxDecoration(
           // color: ColorUtils.primaryColor,
           color: isSelected ? Colors.deepOrange : ColorUtils.primaryColor,
@@ -40,18 +43,27 @@ class SidebarItem extends StatelessWidget {
                 topLeft: Radius.circular(14.r),
                 topRight: Radius.circular(14.r),
               ),
-              child: Image.asset(
-                image,
-                width: double.infinity,
+              child:
+              // Image.asset(
+              //   image,
+              //   width: double.infinity,
+              //   fit: BoxFit.cover,
+              // ),
+              ImageShow(
+                imageUrl: CommonFunction().makeImageUrl('https://e01.yeapps.com/3dine/api/v1/get-image/DBH_cat_20250310102052.png'),
+                isLocal: imageUrl.isNotEmpty,
                 fit: BoxFit.cover,
+                width: double.infinity,
               ),
             ),
             SizedBox(height: 6.h),
             Text(
-              title,
+              categoryName,
+              maxLines: 2,
+              textAlign: TextAlign.center,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp,color: isSelected?ColorUtils.color1:ColorUtils.black),
             ),
-            SizedBox(height: 4.h),
+            SizedBox(height: 6.h),
           ],
         ),
       ),

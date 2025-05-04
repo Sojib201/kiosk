@@ -31,18 +31,9 @@ class ImageShow extends StatelessWidget {
         : Image.asset(
             ImagerUrl.defaultFoodIcon,
             fit: BoxFit.contain,
+            height: height,
+            width: width,
           );
 
-    // CachedNetworkImage(
-    //   imageUrl: imageUrl,
-    //   width: width,
-    //   height: height,
-    //   fit: fit,
-    //   placeholder: (context, url) => const CircularProgressIndicator(),
-    //   errorWidget: (context, url, error) => Image.asset(
-    //     ImagerUrl.defaultFoodIcon,
-    //     fit: BoxFit.contain,
-    //   ),
-    // );
   }
 }

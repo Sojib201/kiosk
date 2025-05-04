@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiosk/src/core/constants/const_string.dart';
 import 'package:kiosk/src/core/constants/hive_constants.dart';import 'package:kiosk/src/core/utils/color_utils.dart';
 import 'package:kiosk/src/data/datasources/local/local_data_source.dart';
+import 'package:kiosk/src/features/item_screen/bloc/item_screen_bloc.dart';
 import 'package:kiosk/src/features/log_in_screen/login_screen.dart';
 
 import 'bloc/appdware_bloc.dart';
@@ -24,6 +25,7 @@ class AppDrawer extends StatefulWidget {
 }
 
 class _AppDrawerState extends State<AppDrawer> {
+  final GlobalKey<ScaffoldState> drawerKey=GlobalKey() ;
 
   @override
   void initState() {
@@ -128,10 +130,12 @@ class _AppDrawerState extends State<AppDrawer> {
                                   style: TextStyle(fontSize: 16.0, color: Colors.black),
                                 ),
                                 trailing: Icon(Icons.arrow_forward_ios, size: 16, color: ColorUtils.black),
-                                onTap: () async { widget.drawerKey.currentState?.closeDrawer();
+                                onTap: () async {
+                                  widget.drawerKey.currentState?.closeEndDrawer();
 
+                                context.read<ItemScreenBloc>().add(GetAllResturantData(true));
                                 }),
-                            ListTile(
+                             ListTile(
                                 leading: const Icon(
                                   Icons.exit_to_app,
                                   color: Colors.black,
@@ -141,7 +145,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   style: TextStyle(fontSize: 16.0, color: Colors.black),
                                 ),
                                 trailing: Icon(Icons.arrow_forward_ios, size: 16, color: ColorUtils.black),
-                                onTap: () async { widget.drawerKey.currentState?.closeDrawer();
+                                onTap: () async { widget.drawerKey.currentState?.closeEndDrawer();
                                   await HiveOperation().addData(false, HiveBoxKeys.isLogIn);
                                  await HiveBoxes.allSettings.clear();
                                  await HiveBoxes.basicBox.clear();

@@ -20,11 +20,11 @@ class TagWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: EdgeInsets.only(right: 14.w),
-        padding: EdgeInsets.symmetric(
-          horizontal: 8.w,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 8.w,),
         decoration: BoxDecoration(
-            border: Border.all(width: 1.w, color:isSelected?ColorUtils.deepOrange: ColorUtils.secondaryColor),
+            border: Border.all(
+                width: isSelected ?  1.5.w :  1.5.w,
+                color:isSelected?ColorUtils.deepOrange: ColorUtils.secondaryColor),
             color: isSelected ? Colors.deepOrange : ColorUtils.primaryColor,
           borderRadius: BorderRadius.circular(14.r),
             boxShadow: [
@@ -32,9 +32,10 @@ class TagWidget extends StatelessWidget {
                 color: ColorUtils.black.withOpacity(0.2),
                 blurRadius: 6.r,
                 spreadRadius: 0,
-                offset: Offset(-1, -1),
+                offset: const Offset(0, 60),
               ),
             ]
+               ,
         ),
         child: Center(
           child: Text(
