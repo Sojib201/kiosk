@@ -32,15 +32,17 @@ final class SubmitLoading extends ItemScreenState {}
 final class CancelOrderLoading extends ItemScreenState {}
 final class ErrorState extends ItemScreenState {}
 
-final class ItemSearchResult extends ItemScreenState {
-  final List<ItemList> filteredItems;
-  final String currencySymbol;
-
-  const ItemSearchResult(this.filteredItems, this.currencySymbol);
-
-  @override
-  List<Object> get props => [filteredItems];
-}
+// final class ItemSearchResult extends ItemScreenState {
+//   final List<ItemList> filteredItems;
+//   final String currencySymbol;
+//   final AllSettings allSettings;
+//   final User userData;
+//
+//   const ItemSearchResult(this.filteredItems, this.currencySymbol, this.allSettings, this.userData);
+//
+//   @override
+//   List<Object> get props => [filteredItems];
+// }
 
 final class ItemDataLoadedState extends ItemScreenState {
 

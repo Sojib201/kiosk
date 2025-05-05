@@ -4,10 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:kiosk/src/core/constants/hive_constants.dart';
 import 'package:kiosk/src/features/item_screen/app_drawer/bloc/appdware_bloc.dart';
-import 'package:kiosk/src/features/item_screen/bloc/item_screen_bloc.dart';
-import 'package:kiosk/src/features/item_screen/widgets/catagory_cuisin/bloc/category_bloc.dart';
+import 'package:kiosk/src/features/item_screen/bloc/item_screen_bloc/item_screen_bloc.dart';
+import 'package:kiosk/src/features/item_screen/bloc/item_screen_bloc/item_show_bloc/item_show_bloc.dart';
+import 'package:kiosk/src/features/item_screen/item_home_screen.dart';
+import 'package:kiosk/src/features/item_screen/widgets/catagory/bloc/category_bloc.dart';
 import 'package:kiosk/src/features/log_in_screen/bloc/login_bloc.dart';
-import 'package:kiosk/src/features/log_in_screen/login_screen.dart';
 import 'package:kiosk/src/features/registration_screen/bloc/registration_bloc.dart';
 
 
@@ -43,6 +44,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => CategoryBloc(),
         ),
+        BlocProvider(
+          create: (context) => ItemShowBloc(),
+        ),
       ],
       child: ScreenUtilInit(
       
@@ -61,7 +65,7 @@ class MyApp extends StatelessWidget {
           ),
           //home: const HomePage(),
           //home: const FoodKioskScreen(),
-          home: const LoginScreen(),
+          home: const FoodKioskScreen(),
         ),
       ),
     );

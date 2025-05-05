@@ -2,18 +2,16 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
-
 import 'package:equatable/equatable.dart';
-import 'package:kiosk/src/core/constants/hive_constants.dart';
-import 'package:kiosk/src/core/shared/common/common_function.dart';
-import 'package:kiosk/src/core/shared/common/download_show_delete_in_local_image.dart';
-import 'package:kiosk/src/data/datasources/local/local_data_source.dart';
-import 'package:kiosk/src/data/models/guest_count_model.dart';
-import 'package:kiosk/src/data/models/order_model.dart';
-import 'package:kiosk/src/data/models/settings_mode.dart';
-import 'package:kiosk/src/data/models/user_model.dart';
-import '../../../core/constants/app_constants.dart';
-import '../../../data/datasources/remote/remote_data_source.dart';
+
+import '../../../../core/constants/hive_constants.dart';
+import '../../../../core/shared/common/download_show_delete_in_local_image.dart';
+import '../../../../data/datasources/local/local_data_source.dart';
+import '../../../../data/datasources/remote/remote_data_source.dart';
+import '../../../../data/models/settings_mode.dart';
+import '../../../../data/models/user_model.dart';
+
+
 
 part 'item_screen_event.dart';
 part 'item_screen_state.dart';
@@ -21,56 +19,57 @@ part 'item_screen_state.dart';
 class ItemScreenBloc extends Bloc<ItemScreenEvent, ItemScreenState> {
   AllSettings? allSettings;
   ItemScreenBloc() : super(ItemScreenInitial()) {
-    on<SearchItemEvent>((event, emit) async {
-      // print('event list : ${event.items.toList()}');
-      if (event.items.isNotEmpty) {
-        User loginInfo = userFromJson(await HiveOperation().getData(HiveBoxKeys.userInfo));
-        final List<ItemList> items = event.items.where((element) => element.categories!.contains(event.searchItem) || element.cuisines!.contains(event.searchItem)).toList();
-        emit(ItemLoadedSearched(items, loginInfo.restaurantInfo!.currencySymbol!));
-      } else {
-        emit(ItemScreenInitial());
-      }
-      // TODO: implement event handler
-    });
+
+    // on<SearchItemEvent>((event, emit) async {
+    //   // print('event list : ${event.items.toList()}');
+    //   if (event.items.isNotEmpty) {
+    //     User loginInfo = userFromJson(await HiveOperation().getData(HiveBoxKeys.userInfo));
+    //     final List<ItemList> items = event.items.where((element) => element.categories!.contains(event.searchItem) || element.cuisines!.contains(event.searchItem)).toList();
+    //     emit(ItemLoadedSearched(items, loginInfo.restaurantInfo!.currencySymbol!));
+    //   } else {
+    //     emit(ItemScreenInitial());
+    //   }
+    //   // TODO: implement event handler
+    // });
 
 
-    on<SearchingEvent>((event, emit) async {
-      emit(ItemSearchLoading());
-      print('event list ${event.itemList.toList()}');
-
-      if (event.itemList.isNotEmpty) {
-        User loginInfo = userFromJson(await HiveOperation().getData(HiveBoxKeys.userInfo));
-
-        final query = event.searchQuery.trim().toLowerCase();
-        final filteredItems = event.itemList.where((element) {
-          final nameMatch = element.foodName?.toLowerCase().contains(query) ?? false;
-
-
-          return nameMatch;
-        }).toList();
-
-
-        emit(ItemSearchResult(filteredItems, loginInfo.restaurantInfo!.currencySymbol!));
-      } else {
-        emit(ItemScreenInitial());
-      }
-    });
-
-
-    on<SearchingTag>((event, emit) async {
-      emit(ItemSearchLoading());
-      User loginInfo = userFromJson(await HiveOperation().getData(HiveBoxKeys.userInfo));
-      final queries = event.selectedTags.map((e) => e.toLowerCase()).toList();
-      final filteredItems = event.itemList.where((element) {
-        final itemTags = element.tags?.map((e) => e.toLowerCase()) ?? [];
-        return queries.any((query) => itemTags.contains(query));
-      }).toList();
-
-      emit(ItemSearchResult(filteredItems, loginInfo.restaurantInfo!.currencySymbol!));
-    });
+    // on<SearchingEvent>((event, emit) async {
+    //   emit(ItemSearchLoading());
+    //   print('event list ${event.itemList.toList()}');
+    //
+    //   if (event.itemList.isNotEmpty) {
+    //     User loginInfo = userFromJson(await HiveOperation().getData(HiveBoxKeys.userInfo));
+    //
+    //     final query = event.searchQuery.trim().toLowerCase();
+    //     final filteredItems = event.itemList.where((element) {
+    //       final nameMatch = element.foodName?.toLowerCase().contains(query) ?? false;
+    //
+    //
+    //       return nameMatch;
+    //     }).toList();
+    //
+    //
+    //     emit(ItemSearchResult(filteredItems, loginInfo.restaurantInfo!.currencySymbol!,allSettings!,loginInfo));
+    //   } else {
+    //     emit(ItemScreenInitial());
+    //   }
+    // });
 
 
-    AllSettings allSettings;
+    // on<SearchingTag>((event, emit) async {
+    //   emit(ItemSearchLoading());
+    //   User loginInfo = userFromJson(await HiveOperation().getData(HiveBoxKeys.userInfo));
+    //   final queries = event.selectedTags.map((e) => e.toLowerCase()).toList();
+    //   final filteredItems = event.itemList.where((element) {
+    //     final itemTags = element.tags?.map((e) => e.toLowerCase()) ?? [];
+    //     return queries.any((query) => itemTags.contains(query));
+    //   }).toList();
+    //
+    //   emit(ItemSearchResult(filteredItems, loginInfo.restaurantInfo!.currencySymbol!,allSettings!,loginInfo));
+    // });
+
+
+
     on<GetAllResturantData>((event, emit) async {
       emit(ItemSearchLoading());
       User loginInfo = userFromJson(await HiveOperation().getData(HiveBoxKeys.userInfo));
@@ -113,7 +112,7 @@ class ItemScreenBloc extends Bloc<ItemScreenEvent, ItemScreenState> {
         allSettings = allSettingsFromJson(await HiveOperation().getSettingsData(HiveBoxKeys.allSettings));
         log(allSettings.toString(), name: "From Hive");
       }
-      emit(ItemDataLoadedState( allSettings: allSettings,  userData: loginInfo, ));
+      emit(ItemDataLoadedState( allSettings: allSettings!,  userData: loginInfo, ));
 
 
     });
