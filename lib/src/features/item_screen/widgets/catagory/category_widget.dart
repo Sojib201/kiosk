@@ -11,9 +11,11 @@ import '../../bloc/item_screen_bloc/item_show_bloc/item_show_event.dart';
 
 class CategoryWidget extends StatefulWidget {
   AllSettings allSettings;
+  final Function(String) selectedCategory;
+
   CategoryWidget({
     super.key,
-    required this.allSettings,
+    required this.allSettings, required this.selectedCategory,
   });
 
   @override
@@ -75,28 +77,36 @@ class _CategoryWidgetState extends State<CategoryWidget> {
 
               onTap: () {
                 setState(() {
+                  // selectedIndex = index;
+                  // String? selectedCategory = categoryList[index].categoryName;
+                  // widget.selectedCategory(selectedCategory??'');
                   if (selectedIndex == index) {
-                    // Deselect category
+
                     selectedIndex = -1;
-                    context.read<ItemShowBloc>().add(
-                      CategorySearchingEvent(
-                        allSettings: widget.allSettings,
-                        searchItem: '', // empty triggers all items
-                      ),
-                    );
+                    // context.read<ItemShowBloc>().add(
+                    //   CategorySearchingEvent(
+                    //     allSettings: widget.allSettings,
+                    //     searchItem: '', // empty triggers all items
+                    //   ),
+                    // );
+                    widget.selectedCategory('');
                   } else {
-                    // Select new category
+
+                    // selectedIndex = index;
+                    // String? selectedCategory = categoryList[index].categoryName;
+                    //
+                    // if (selectedCategory != null) {
+                    //   context.read<ItemShowBloc>().add(
+                    //     CategorySearchingEvent(
+                    //       allSettings: widget.allSettings,
+                    //       searchItem: selectedCategory,
+                    //     ),
+                    //   );
+                    // }
+
                     selectedIndex = index;
                     String? selectedCategory = categoryList[index].categoryName;
-
-                    if (selectedCategory != null) {
-                      context.read<ItemShowBloc>().add(
-                        CategorySearchingEvent(
-                          allSettings: widget.allSettings,
-                          searchItem: selectedCategory,
-                        ),
-                      );
-                    }
+                    widget.selectedCategory(selectedCategory??'');
                   }
                 });
               },

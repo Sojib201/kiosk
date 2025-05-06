@@ -68,3 +68,13 @@ final class ItemfromCategory extends ItemShowState {
   // TODO: implement props
   List<Object?> get props => [];
 }
+
+final class FilterItemState extends ItemShowState {
+  final List<ItemList> items;
+
+  FilterItemState({required this.items,});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}

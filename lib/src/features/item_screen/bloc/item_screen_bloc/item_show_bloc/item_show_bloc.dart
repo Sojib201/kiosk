@@ -82,42 +82,43 @@ class ItemShowBloc extends Bloc<ItemShowEvent, ItemShowState> {
 
 
 
-    // on<SearchingEvent>((event, emit) async {
-    //   emit(ItemLoadingState());
-    //   final fullItemList=event.allSettings.itemList ?? [];
-    //   if(fullItemList.isNotEmpty){
-    //     if (event.allSettings.itemList!.isEmpty)
-    //     {
-    //       emit(ItemSearchResult(filteredItems: fullItemList, allSettings: event.allSettings,title: 'All Items'));
-    //     }
-    //     final query = event.searchQuery.trim().toLowerCase();
-    //     final filteredItems = event.allSettings.itemList!.where((element) {
-    //       final nameMatch = element.foodName?.toLowerCase().contains(query) ?? false;
-    //       return nameMatch;
-    //     }).toList();
-    //     emit(ItemSearchResult(filteredItems: filteredItems, allSettings: event.allSettings,title: query));
-    //
-    //   }
-    // });
-
-    // on<SearchingEvent>((event, emit) async {
-    //   emit(ItemLoadingState());
-    //   // if (event.allSettings.itemList!.isNotEmpty)
-    //   if (event.allSettings.itemList != null && event.allSettings.itemList!.isNotEmpty)
-    //   {
-    //     final query = event.searchQuery.trim().toLowerCase();
-    //     final filteredItems = event.allSettings.itemList!.where((element) {
-    //       final nameMatch = element.foodName?.toLowerCase().contains(query) ?? false;
-    //       return nameMatch;
-    //     }).toList();
-    //     emit(ItemSearchResult(filteredItems: filteredItems, allSettings: event.allSettings,title: query));
-    //
-    //   } else {
-    //     emit(ItemInitial());
-    //   }
-    // });
 
 
+     on<FilterItemEvent>((event, emit) async{
+      List<ItemList> filterItemsList=[];
+      emit(ItemLoadingState());
+      print("category is : ${event.selectedCategory}");
+      print("search is : ${event.searchQuery}");
+      print("tags is : ${event.selectedTags.toString()}");
+
+      if(event.selectedCategory.isNotEmpty || event.selectedCategory!=''){
+        filterItemsList = event.allSettings.itemList!.where((element) =>
+        element.categories!.contains(event.selectedCategory) || element.cuisines!.contains(event.selectedCategory)).toList();
+      }
+      else {
+        filterItemsList=event.allSettings.itemList!;
+      }
+      if(event.selectedTags.isNotEmpty){
+        final queries = event.selectedTags.map((e) => e.toLowerCase()).toList();
+        final filterTagItemsList = filterItemsList.where((element) {
+          final itemTags = element.tags?.map((e) => e.toLowerCase()) ?? [];
+          return queries.any((query) => itemTags.contains(query));
+        }).toList();
+
+        filterItemsList=filterTagItemsList;
+
+      }
+   if(event.searchQuery.isNotEmpty|| event.searchQuery!=''||event.searchQuery=='null'){
+     final query = event.searchQuery.trim().toLowerCase();
+     final searchFilterItemList = filterItemsList.where((element) {
+       final nameMatch = element.foodName?.toLowerCase().contains(query) ?? false;
+       return nameMatch;
+     }).toList();
+     filterItemsList=searchFilterItemList;
+   }
+   emit(FilterItemState(items: filterItemsList));
+
+    });
 
 
   }

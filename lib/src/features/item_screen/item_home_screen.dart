@@ -33,6 +33,7 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
   AllSettings? allSettings;
   TextEditingController _searchingController = TextEditingController();
 
+
   final List<String> imageAssets = [
     'assets/chowmin.png',
     //'assets/pizza.png',
@@ -44,6 +45,8 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
   ];
 
   List<int> selectedIndex = [];
+  List<String> selectedTags = [];
+ String selectedCategory='';
 
 
   // int getCrossAxisCount(BuildContext context) {
@@ -78,6 +81,8 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
     // final double containerWidth = tablet
     //     ? (MediaQuery.of(context).size.width * 0.14).w
     //     : (MediaQuery.of(context).size.width * 0.22).w;
+
+
 
     return Scaffold(
       key: _scaffoldKey,
@@ -114,22 +119,40 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                               child: TextField(
                                 controller: _searchingController,
                                 onChanged: (query) {
-                                  if(query.trim().isEmpty){
+                                  // if(query.trim().isEmpty){
+                                  //   // context.read<ItemShowBloc>().add(
+                                  //   //     SearchingEvent(
+                                  //   //        // allSettings: allSettings!,
+                                  //   //       itemList: itemList,
+                                  //   //         searchQuery: ""),
+                                  //   // );
+                                  //
+                                  //   context.read<ItemShowBloc>().add(
+                                  //     FilterItemEvent(
+                                  //         allSettings: state.allSettings,
+                                  //         selectedTags: selectedTags,
+                                  //         selectedCategory:selectedCategory ,
+                                  //         searchQuery: ""
+                                  //     ),
+                                  //   );
+                                  // }
+                                  // else {
+                                    // context.read<ItemShowBloc>().add(
+                                    //   SearchingEvent(
+                                    //     // allSettings: allSettings!,
+                                    //     itemList: itemList,
+                                    //     searchQuery: query,
+                                    //   ),
+                                    // );
                                     context.read<ItemShowBloc>().add(
-                                        SearchingEvent(
-                                           // allSettings: allSettings!,
-                                          itemList: itemList,
-                                            searchQuery: ""));
-                                  }
-                                  else {
-                                    context.read<ItemShowBloc>().add(
-                                      SearchingEvent(
-                                        // allSettings: allSettings!,
-                                        itemList: itemList,
-                                        searchQuery: query,
+                                      FilterItemEvent(
+                                          allSettings: allSettings!,
+                                          selectedTags: selectedTags,
+                                          selectedCategory:selectedCategory,
+                                          searchQuery: _searchingController.text.trim()
                                       ),
                                     );
-                                  }
+                                  // }
 
                                   // if (query.isEmpty) {
                                   //   context.read<ItemShowBloc>().add(
@@ -151,25 +174,29 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                                         right: 10.w, bottom: 2.h, top: 3.h),
                                     onPressed: () {
                                       _searchingController.clear();
-                                      _searchingController.addListener(() {
-                                        // context.read<ItemShowBloc>().add(
-                                        //       CategorySearchingEvent(
-                                        //         allSettings: allSettings!,
-                                        //         searchItem: allSettings!
-                                        //             .category!
-                                        //             .first
-                                        //             .categoryList!
-                                        //             .first
-                                        //             .categoryName
-                                        //             .toString(),
-                                        //       ),
-                                        //     );
-                                      });
                                       context.read<ItemShowBloc>().add(
-                                          SearchingEvent(
-                                              // allSettings: allSettings!,
-                                              itemList: itemList,
-                                              searchQuery: ""));
+                                        FilterItemEvent(
+                                            allSettings: allSettings!,
+                                            selectedTags: selectedTags,
+                                            selectedCategory:selectedCategory,
+                                            searchQuery: _searchingController.text.trim()
+                                        ),
+                                      );
+                                      // _searchingController.addListener(() {
+                                      //   context.read<ItemShowBloc>().add(
+                                      //     FilterItemEvent(
+                                      //         allSettings: allSettings!,
+                                      //         selectedTags: selectedTags,
+                                      //         selectedCategory:selectedCategory,
+                                      //         searchQuery: _searchingController.text.trim()
+                                      //     ),
+                                      //   );
+                                      // });
+                                      // context.read<ItemShowBloc>().add(
+                                      //     SearchingEvent(
+                                      //         // allSettings: allSettings!,
+                                      //         itemList: itemList,
+                                      //         searchQuery: ""));
                                       // context.read<ItemShowBloc>().add(
                                       //       CategorySearchingEvent(
                                       //         allSettings: allSettings!,
@@ -240,6 +267,19 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                     child: Row(
                       children: [
                         CategoryWidget(
+                          selectedCategory: (selectedCategoryFromWidget) {
+                            selectedCategory =selectedCategoryFromWidget;
+
+                              context.read<ItemShowBloc>().add(
+                                FilterItemEvent(
+                                  allSettings: state.allSettings,
+                                  selectedTags: selectedTags,
+                                  selectedCategory:selectedCategory ,
+                                  searchQuery: _searchingController.text.trim()
+                                ),
+                              );
+
+                          },
                           allSettings: state.allSettings,
 
                         ),
@@ -277,18 +317,37 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                                             } else {
                                               selectedIndex.add(index);
                                             }
-
-                                              final selectedTags = selectedIndex.map((i) {
-                                                return allSettings!.tagsList![i].tagName.toString();
-                                              }).toList();
+                                             selectedTags = selectedIndex.map((i) {
+                                              return allSettings!.tagsList![i].tagName.toString();
+                                            }).toList();
                                             context.read<ItemShowBloc>().add(
-                                              TagSearchingEvent(
-                                                  // allSettings:allSettings!,
-                                                  itemList: itemList,
-                                                  selectedTags: selectedTags
-
+                                              FilterItemEvent(
+                                                  allSettings: state.allSettings,
+                                                  selectedTags: selectedTags,
+                                                  selectedCategory:selectedCategory ,
+                                                  searchQuery: _searchingController.text.trim()
                                               ),
                                             );
+
+                                              // final selectedTags = selectedIndex.map((i) {
+                                              //   return allSettings!.tagsList![i].tagName.toString();
+                                              // }).toList();
+                                            // context.read<ItemShowBloc>().add(
+                                            //   TagSearchingEvent(
+                                            //       // allSettings:allSettings!,
+                                            //       itemList: itemList,
+                                            //       selectedTags: selectedTags
+                                            //
+                                            //   ),
+                                            // );
+                                            // context.read<ItemShowBloc>().add(
+                                            //   FilterItemEvent(
+                                            //       allSettings: state.allSettings,
+                                            //       selectedTags: selectedTags,
+                                            //       selectedCategory:selectedCategory ,
+                                            //       searchQuery: _searchingController.text.trim()
+                                            //   ),
+                                            // );
 
                                             // if (selectedIndex.isNotEmpty) {
                                             //   final selectedTags = selectedIndex.map((i) {
@@ -329,13 +388,205 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                               Expanded(
                                 child: BlocBuilder<ItemShowBloc, ItemShowState>(
                                   builder: (context, state) {
-                                    if(state is ItemfromCategory){
+                                    // if(state is ItemfromCategory){
+                                    //   if (state.items.isEmpty) {
+                                    //
+                                    //     return const Center(
+                                    //         child: Text('No Items Found'));
+                                    //   } else {
+                                    //     itemList=state.items;
+                                    //     return Column(
+                                    //       crossAxisAlignment:
+                                    //       CrossAxisAlignment.start,
+                                    //       children: [
+                                    //         Padding(
+                                    //           padding: EdgeInsets.symmetric(
+                                    //               horizontal: 6.w),
+                                    //           child: Text(
+                                    //             state.title,
+                                    //             style: TextStyle(
+                                    //                 fontSize: 22.sp,
+                                    //                 fontWeight:
+                                    //                 FontWeight.w500),
+                                    //           ),
+                                    //         ),
+                                    //         SizedBox(height: 8.h),
+                                    //         Expanded(
+                                    //           child: GridView.builder(
+                                    //             itemCount:
+                                    //             state.items.length,
+                                    //             gridDelegate:
+                                    //             SliverGridDelegateWithFixedCrossAxisCount(
+                                    //               crossAxisCount: 4,
+                                    //               mainAxisSpacing: 10.h,
+                                    //               crossAxisSpacing: 4.w,
+                                    //               childAspectRatio: 0.76,
+                                    //             ),
+                                    //             itemBuilder: (context, index) {
+                                    //               ItemList itemmodel = state.items[index];
+                                    //               return ItemCard(
+                                    //                 onTap: () {},
+                                    //                 itemName:
+                                    //                 itemmodel.foodName!,
+                                    //                 time: '20 min',
+                                    //                 ratings: '⭐ 4.5',
+                                    //                 price: itemmodel
+                                    //                     .foodPortions!
+                                    //                     .isNotEmpty
+                                    //                     ? itemmodel
+                                    //                     .foodPortions!
+                                    //                     .first
+                                    //                     .portionPrice!
+                                    //                     .toString()
+                                    //                     : itemmodel.unitPrice
+                                    //                     .toString(),
+                                    //                 imageUrl: itemmodel
+                                    //                     .imageUrl!.isEmpty
+                                    //                     ? ""
+                                    //                     : itemmodel.foodId!,
+                                    //               );
+                                    //             },
+                                    //           ),
+                                    //         )
+                                    //       ],
+                                    //     );
+                                    //   }
+                                    // }
+                                    // if (state is ItemSearchResult) {
+                                    //   if (state.filteredItems.isEmpty) {
+                                    //     return const Center(
+                                    //         child: Text('No Items Found'));
+                                    //   } else {
+                                    //     itemList=state.filteredItems;
+                                    //     return Column(
+                                    //       crossAxisAlignment:
+                                    //           CrossAxisAlignment.start,
+                                    //       children: [
+                                    //         Padding(
+                                    //           padding: EdgeInsets.symmetric(
+                                    //               horizontal: 6.w),
+                                    //           child: Text(
+                                    //             state.title,
+                                    //             style: TextStyle(
+                                    //                 fontSize: 22.sp,
+                                    //                 fontWeight:
+                                    //                     FontWeight.w500),
+                                    //           ),
+                                    //         ),
+                                    //         SizedBox(height: 8.h),
+                                    //         Expanded(
+                                    //           child: GridView.builder(
+                                    //             itemCount:
+                                    //                 state.filteredItems.length,
+                                    //             gridDelegate:
+                                    //                 SliverGridDelegateWithFixedCrossAxisCount(
+                                    //               crossAxisCount: 4,
+                                    //               mainAxisSpacing: 10.h,
+                                    //               crossAxisSpacing: 4.w,
+                                    //               childAspectRatio: 0.76,
+                                    //             ),
+                                    //             itemBuilder: (context, index) {
+                                    //               ItemList itemmodel = state
+                                    //                   .filteredItems[index];
+                                    //               return ItemCard(
+                                    //                 onTap: () {},
+                                    //                 itemName:
+                                    //                     itemmodel.foodName!,
+                                    //                 time: '20 min',
+                                    //                 ratings: '⭐ 4.5',
+                                    //                 price: itemmodel
+                                    //                         .foodPortions!
+                                    //                         .isNotEmpty
+                                    //                     ? itemmodel
+                                    //                         .foodPortions!
+                                    //                         .first
+                                    //                         .portionPrice!
+                                    //                         .toString()
+                                    //                     : itemmodel.unitPrice
+                                    //                         .toString(),
+                                    //                 imageUrl: itemmodel
+                                    //                         .imageUrl!.isEmpty
+                                    //                     ? ""
+                                    //                     : itemmodel.foodId!,
+                                    //               );
+                                    //             },
+                                    //           ),
+                                    //         )
+                                    //       ],
+                                    //     );
+                                    //   }
+                                    // }
+                                    // if(state is ItemTagSearchResult){
+                                    //   if (state.filteredItems.isEmpty) {
+                                    //     return const Center(
+                                    //         child: Text('No Items Found'));
+                                    //   } else {
+                                    //     itemList=state.filteredItems;
+                                    //     return Column(
+                                    //       crossAxisAlignment:
+                                    //       CrossAxisAlignment.start,
+                                    //       children: [
+                                    //         Padding(
+                                    //           padding: EdgeInsets.symmetric(
+                                    //               horizontal: 6.w),
+                                    //           child: Text(
+                                    //             state.title,
+                                    //             style: TextStyle(
+                                    //                 fontSize: 22.sp,
+                                    //                 fontWeight:
+                                    //                 FontWeight.w500),
+                                    //           ),
+                                    //         ),
+                                    //         SizedBox(height: 8.h),
+                                    //         Expanded(
+                                    //           child: GridView.builder(
+                                    //             itemCount:
+                                    //             state.filteredItems.length,
+                                    //             gridDelegate:
+                                    //             SliverGridDelegateWithFixedCrossAxisCount(
+                                    //               crossAxisCount: 4,
+                                    //               mainAxisSpacing: 10.h,
+                                    //               crossAxisSpacing: 4.w,
+                                    //               childAspectRatio: 0.76,
+                                    //             ),
+                                    //             itemBuilder: (context, index) {
+                                    //               ItemList itemmodel = state
+                                    //                   .filteredItems[index];
+                                    //               return ItemCard(
+                                    //                 onTap: () {},
+                                    //                 itemName:
+                                    //                 itemmodel.foodName!,
+                                    //                 time: '20 min',
+                                    //                 ratings: '⭐ 4.5',
+                                    //                 price: itemmodel
+                                    //                     .foodPortions!
+                                    //                     .isNotEmpty
+                                    //                     ? itemmodel
+                                    //                     .foodPortions!
+                                    //                     .first
+                                    //                     .portionPrice!
+                                    //                     .toString()
+                                    //                     : itemmodel.unitPrice
+                                    //                     .toString(),
+                                    //                 imageUrl: itemmodel
+                                    //                     .imageUrl!.isEmpty
+                                    //                     ? ""
+                                    //                     : itemmodel.foodId!,
+                                    //               );
+                                    //             },
+                                    //           ),
+                                    //         )
+                                    //       ],
+                                    //     );
+                                    //   }
+                                    //
+                                    // }
+                                    if(state is FilterItemState){
                                       if (state.items.isEmpty) {
-
                                         return const Center(
                                             child: Text('No Items Found'));
                                       } else {
-                                        itemList=state.items;
+                                        // itemList=state.items;
                                         return Column(
                                           crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -344,7 +595,7 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                                               padding: EdgeInsets.symmetric(
                                                   horizontal: 6.w),
                                               child: Text(
-                                                state.title,
+                                                '',
                                                 style: TextStyle(
                                                     fontSize: 22.sp,
                                                     fontWeight:
@@ -364,135 +615,8 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                                                   childAspectRatio: 0.76,
                                                 ),
                                                 itemBuilder: (context, index) {
-                                                  ItemList itemmodel = state.items[index];
-                                                  return ItemCard(
-                                                    onTap: () {},
-                                                    itemName:
-                                                    itemmodel.foodName!,
-                                                    time: '20 min',
-                                                    ratings: '⭐ 4.5',
-                                                    price: itemmodel
-                                                        .foodPortions!
-                                                        .isNotEmpty
-                                                        ? itemmodel
-                                                        .foodPortions!
-                                                        .first
-                                                        .portionPrice!
-                                                        .toString()
-                                                        : itemmodel.unitPrice
-                                                        .toString(),
-                                                    imageUrl: itemmodel
-                                                        .imageUrl!.isEmpty
-                                                        ? ""
-                                                        : itemmodel.foodId!,
-                                                  );
-                                                },
-                                              ),
-                                            )
-                                          ],
-                                        );
-                                      }
-                                    }
-                                    if (state is ItemSearchResult) {
-                                      if (state.filteredItems.isEmpty) {
-                                        return const Center(
-                                            child: Text('No Items Found'));
-                                      } else {
-                                        itemList=state.filteredItems;
-                                        return Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 6.w),
-                                              child: Text(
-                                                state.title,
-                                                style: TextStyle(
-                                                    fontSize: 22.sp,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ),
-                                            SizedBox(height: 8.h),
-                                            Expanded(
-                                              child: GridView.builder(
-                                                itemCount:
-                                                    state.filteredItems.length,
-                                                gridDelegate:
-                                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                                  crossAxisCount: 4,
-                                                  mainAxisSpacing: 10.h,
-                                                  crossAxisSpacing: 4.w,
-                                                  childAspectRatio: 0.76,
-                                                ),
-                                                itemBuilder: (context, index) {
                                                   ItemList itemmodel = state
-                                                      .filteredItems[index];
-                                                  return ItemCard(
-                                                    onTap: () {},
-                                                    itemName:
-                                                        itemmodel.foodName!,
-                                                    time: '20 min',
-                                                    ratings: '⭐ 4.5',
-                                                    price: itemmodel
-                                                            .foodPortions!
-                                                            .isNotEmpty
-                                                        ? itemmodel
-                                                            .foodPortions!
-                                                            .first
-                                                            .portionPrice!
-                                                            .toString()
-                                                        : itemmodel.unitPrice
-                                                            .toString(),
-                                                    imageUrl: itemmodel
-                                                            .imageUrl!.isEmpty
-                                                        ? ""
-                                                        : itemmodel.foodId!,
-                                                  );
-                                                },
-                                              ),
-                                            )
-                                          ],
-                                        );
-                                      }
-                                    }
-                                    if(state is ItemTagSearchResult){
-                                      if (state.filteredItems.isEmpty) {
-                                        return const Center(
-                                            child: Text('No Items Found'));
-                                      } else {
-                                        itemList=state.filteredItems;
-                                        return Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 6.w),
-                                              child: Text(
-                                                state.title,
-                                                style: TextStyle(
-                                                    fontSize: 22.sp,
-                                                    fontWeight:
-                                                    FontWeight.w500),
-                                              ),
-                                            ),
-                                            SizedBox(height: 8.h),
-                                            Expanded(
-                                              child: GridView.builder(
-                                                itemCount:
-                                                state.filteredItems.length,
-                                                gridDelegate:
-                                                SliverGridDelegateWithFixedCrossAxisCount(
-                                                  crossAxisCount: 4,
-                                                  mainAxisSpacing: 10.h,
-                                                  crossAxisSpacing: 4.w,
-                                                  childAspectRatio: 0.76,
-                                                ),
-                                                itemBuilder: (context, index) {
-                                                  ItemList itemmodel = state
-                                                      .filteredItems[index];
+                                                      .items[index];
                                                   return ItemCard(
                                                     onTap: () {},
                                                     itemName:

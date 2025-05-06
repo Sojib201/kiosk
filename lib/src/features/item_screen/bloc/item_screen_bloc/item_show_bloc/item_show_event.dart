@@ -33,3 +33,15 @@ final class CategorySearchingEvent extends ItemShowEvent {
   final String searchItem;
   const CategorySearchingEvent({ required this.searchItem, required this.allSettings});
 }
+
+final class FilterItemEvent extends ItemShowEvent{
+  final AllSettings allSettings;
+  final String selectedCategory;
+  final List<String> selectedTags;
+  final String searchQuery;
+  const FilterItemEvent({required this.allSettings,required this.searchQuery, required this.selectedTags, required this.selectedCategory});
+
+  @override
+  List<Object> get props => [allSettings,selectedCategory,selectedTags,searchQuery];
+
+}
