@@ -9,6 +9,7 @@ import 'package:kiosk/src/features/item_screen/bloc/item_screen_bloc/item_show_b
 import 'package:kiosk/src/features/item_screen/item_home_screen.dart';
 import 'package:kiosk/src/features/item_screen/widgets/catagory/bloc/category_bloc.dart';
 import 'package:kiosk/src/features/log_in_screen/bloc/login_bloc.dart';
+import 'package:kiosk/src/features/log_in_screen/login_screen.dart';
 import 'package:kiosk/src/features/registration_screen/bloc/registration_bloc.dart';
 
 
@@ -63,9 +64,8 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
             useMaterial3: true,
           ),
-          //home: const HomePage(),
-          //home: const FoodKioskScreen(),
-          home: const FoodKioskScreen(),
+           home: const FoodKioskScreen(),
+          //home: LoginScreen()
         ),
       ),
     );

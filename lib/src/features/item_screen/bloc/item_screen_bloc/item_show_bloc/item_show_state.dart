@@ -50,9 +50,10 @@ final class ItemTagSearchResult extends ItemShowState{
 
 final class ItemSearchResult extends ItemShowState {
   final List<ItemList> filteredItems;
-  final AllSettings allSettings;
+  // final AllSettings allSettings;
+  final List<ItemList> itemList;
   final String title;
-   ItemSearchResult({required this.title, required this.filteredItems,  required this.allSettings,});
+   ItemSearchResult({required this.title, required this.filteredItems,  required this.itemList,});
 
   @override
   List<Object> get props => [filteredItems];

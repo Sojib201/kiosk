@@ -114,24 +114,36 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                               child: TextField(
                                 controller: _searchingController,
                                 onChanged: (query) {
-                                  context.read<ItemShowBloc>().add(
-                                      SearchingEvent(
-                                          allSettings: allSettings!,
-                                          searchQuery: query));
-
-                                  if (query.isEmpty) {
+                                  if(query.trim().isEmpty){
                                     context.read<ItemShowBloc>().add(
-                                          CategorySearchingEvent(
-                                              searchItem: allSettings!
-                                                  .category!
-                                                  .first
-                                                  .categoryList!
-                                                  .first
-                                                  .categoryName
-                                                  .toString(),
-                                              allSettings: allSettings!),
-                                        );
+                                        SearchingEvent(
+                                           // allSettings: allSettings!,
+                                          itemList: itemList,
+                                            searchQuery: ""));
                                   }
+                                  else {
+                                    context.read<ItemShowBloc>().add(
+                                      SearchingEvent(
+                                        // allSettings: allSettings!,
+                                        itemList: itemList,
+                                        searchQuery: query,
+                                      ),
+                                    );
+                                  }
+
+                                  // if (query.isEmpty) {
+                                  //   context.read<ItemShowBloc>().add(
+                                  //         CategorySearchingEvent(
+                                  //             searchItem: allSettings!
+                                  //                 .category!
+                                  //                 .first
+                                  //                 .categoryList!
+                                  //                 .first
+                                  //                 .categoryName
+                                  //                 .toString(),
+                                  //             allSettings: allSettings!),
+                                  //       );
+                                  // }
                                 },
                                 decoration: InputDecoration(
                                   suffixIcon: IconButton(
@@ -140,35 +152,36 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                                     onPressed: () {
                                       _searchingController.clear();
                                       _searchingController.addListener(() {
-                                        context.read<ItemShowBloc>().add(
-                                              CategorySearchingEvent(
-                                                allSettings: allSettings!,
-                                                searchItem: allSettings!
-                                                    .category!
-                                                    .first
-                                                    .categoryList!
-                                                    .first
-                                                    .categoryName
-                                                    .toString(),
-                                              ),
-                                            );
+                                        // context.read<ItemShowBloc>().add(
+                                        //       CategorySearchingEvent(
+                                        //         allSettings: allSettings!,
+                                        //         searchItem: allSettings!
+                                        //             .category!
+                                        //             .first
+                                        //             .categoryList!
+                                        //             .first
+                                        //             .categoryName
+                                        //             .toString(),
+                                        //       ),
+                                        //     );
                                       });
                                       context.read<ItemShowBloc>().add(
                                           SearchingEvent(
-                                              allSettings: allSettings!,
+                                              // allSettings: allSettings!,
+                                              itemList: itemList,
                                               searchQuery: ""));
-                                      context.read<ItemShowBloc>().add(
-                                            CategorySearchingEvent(
-                                              allSettings: allSettings!,
-                                              searchItem: allSettings!
-                                                  .category!
-                                                  .first
-                                                  .categoryList!
-                                                  .first
-                                                  .categoryName
-                                                  .toString(),
-                                            ),
-                                          );
+                                      // context.read<ItemShowBloc>().add(
+                                      //       CategorySearchingEvent(
+                                      //         allSettings: allSettings!,
+                                      //         searchItem: allSettings!
+                                      //             .category!
+                                      //             .first
+                                      //             .categoryList!
+                                      //             .first
+                                      //             .categoryName
+                                      //             .toString(),
+                                      //       ),
+                                      //     );
                                     },
                                     icon: Icon(
                                       Icons.cancel_outlined,
@@ -228,6 +241,7 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                       children: [
                         CategoryWidget(
                           allSettings: state.allSettings,
+
                         ),
                         Expanded(
                           child: Column(
@@ -269,7 +283,9 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                                               }).toList();
                                             context.read<ItemShowBloc>().add(
                                               TagSearchingEvent(
-                                                  itemList:itemList, selectedTags: selectedTags
+                                                  // allSettings:allSettings!,
+                                                  itemList: itemList,
+                                                  selectedTags: selectedTags
 
                                               ),
                                             );
@@ -535,6 +551,7 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                                             itemBuilder: (context, index) {
                                               ItemList itemmodel =
                                                   allSettings!.itemList![index];
+                                              itemList=allSettings!.itemList!;
                                               return ItemCard(
                                                 onTap: () {},
                                                 itemName: itemmodel.foodName!,
@@ -630,7 +647,11 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                 ],
               );
             }
-            return Text('Empty');
+            else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
           },
         ),
       ),

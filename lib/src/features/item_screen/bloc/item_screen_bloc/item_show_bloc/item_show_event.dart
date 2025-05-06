@@ -10,9 +10,10 @@ abstract class ItemShowEvent extends Equatable {
 }
 
 final class SearchingEvent extends ItemShowEvent{
-  final AllSettings allSettings;
+  // final AllSettings allSettings;
+  final List<ItemList> itemList;
   final String searchQuery;
-  const SearchingEvent({required this.allSettings,required this.searchQuery});
+  const SearchingEvent({required this.itemList,required this.searchQuery});
 }
 
 final class TagSearchingEvent extends ItemShowEvent {
@@ -28,6 +29,7 @@ final class TagSearchingEvent extends ItemShowEvent {
 
 final class CategorySearchingEvent extends ItemShowEvent {
   final AllSettings allSettings;
+  //final List<ItemList> itemList;
   final String searchItem;
   const CategorySearchingEvent({ required this.searchItem, required this.allSettings});
 }
