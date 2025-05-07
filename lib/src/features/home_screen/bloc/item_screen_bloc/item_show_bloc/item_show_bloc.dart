@@ -42,19 +42,6 @@ class ItemShowBloc extends Bloc<ItemShowEvent, ItemShowState> {
       }
 
     });
-    // on<TagSearchingEvent>((event, emit) async {
-    //   emit(ItemLoadingState());
-    //   if(event.selectedTags.isEmpty){
-    //     emit(ItemTagSearchResult(filteredItems: event.itemList,title: event.selectedTags.toString()));
-    //   }
-    //   final queries = event.selectedTags.map((e) => e.toLowerCase()).toList();
-    //   final filteredItems = event.itemList.where((element) {
-    //     final itemTags = element.tags?.map((e) => e.toLowerCase()) ?? [];
-    //     return queries.any((query) => itemTags.contains(query));
-    //   }).toList();
-    //
-    //   emit(ItemTagSearchResult(filteredItems: filteredItems,title: event.selectedTags.toString()));
-    // });
 
     on<SearchingEvent>((event, emit) async {
       emit(ItemLoadingState());
@@ -79,8 +66,6 @@ class ItemShowBloc extends Bloc<ItemShowEvent, ItemShowState> {
         title: query,
       ));
     });
-
-
 
 
 

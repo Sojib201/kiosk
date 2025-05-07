@@ -82,7 +82,8 @@ class ItemCard extends StatelessWidget {
                   ImageShow(
                     imageUrl: CommonFunction().makeImageUrl(imageUrl),
                     isLocal: imageUrl.isNotEmpty,
-                    //fit: BoxFit.fill,
+                    fit: BoxFit.fill,
+                    width: double.infinity,
                   ),
                 ),
               ),

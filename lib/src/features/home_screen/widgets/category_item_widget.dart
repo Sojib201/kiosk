@@ -50,9 +50,9 @@ class CategoryItemWidget extends StatelessWidget {
               //   fit: BoxFit.cover,
               // ),
               ImageShow(
-                imageUrl: CommonFunction().makeImageUrl('https://e01.yeapps.com/3dine/api/v1/get-image/DBH_cat_20250310102052.png'),
+                imageUrl: CommonFunction().makeImageUrl(imageUrl),
                 isLocal: imageUrl.isNotEmpty,
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
                 width: double.infinity,
               ),
             ),

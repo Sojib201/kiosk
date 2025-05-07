@@ -4,7 +4,7 @@ import 'package:kiosk/src/core/utils/color_utils.dart';
 
 class OrderCartWidget extends StatelessWidget {
   final String title;
-  final int itemCount;
+  final int orderCount;
   final double price;
   final VoidCallback onCancel;
   final VoidCallback onOrder;
@@ -12,7 +12,7 @@ class OrderCartWidget extends StatelessWidget {
   const OrderCartWidget({
     super.key,
     required this.title,
-    required this.itemCount,
+    required this.orderCount,
     required this.price,
     required this.onCancel,
     required this.onOrder,
@@ -81,7 +81,7 @@ class OrderCartWidget extends StatelessWidget {
                         backgroundColor: ColorUtils.secondaryColor,
                         child: Center(
                           child: Text(
-                            itemCount.toString(),
+                            orderCount.toString(),
                             style: TextStyle(fontSize: 15.sp,color: ColorUtils.primaryColor),
                           ),
                         ),

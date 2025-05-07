@@ -21,8 +21,10 @@ class ImageShow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return isLocal
-        ? Image.file(
+        ?
+    Image.file(
             fit: fit,
             File(imageUrl),
             width: width,
@@ -30,7 +32,7 @@ class ImageShow extends StatelessWidget {
           )
         : Image.asset(
             ImagerUrl.defaultFoodIcon,
-            fit: BoxFit.contain,
+            fit: BoxFit.fill,
             height: height,
             width: width,
           );

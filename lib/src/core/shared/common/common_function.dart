@@ -39,7 +39,8 @@ class CommonFunction {
   }
 
   String makeImageUrl(String itemeID) {
-    return "/data/user/0/com.example.dinebaselatest/app_flutter/$itemeID.png";
+     return "/data/user/0/com.example.kiosk/app_flutter/$itemeID.png";
+    //return "/data/user/0/com.example.kiosk/app_flutter/$itemeID";
   }
 
   Future<String?> getId() async {

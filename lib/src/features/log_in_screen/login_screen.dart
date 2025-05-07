@@ -13,7 +13,8 @@ import 'package:kiosk/src/core/constants/hive_constants.dart';
 import 'package:kiosk/src/data/datasources/local/local_data_source.dart';
 import 'package:kiosk/src/data/datasources/remote/remote_data_source.dart';
 import 'package:kiosk/src/features/registration_screen/device_registration_screen.dart';
-import '../item_screen/item_home_screen.dart';
+import '../../core/constants/const_string.dart';
+import '../home_screen/kiosk_home_screen.dart';
 import 'bloc/login_bloc.dart';
 import 'bloc/login_event.dart';
 import 'bloc/login_state.dart';
@@ -76,13 +77,13 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Image.asset(
-                //   ImagerUrl.logo,
-                //   height: 600.h,
-                //   width: 950.w,
-                //   fit: BoxFit.contain,
-                // ),
-                // SizedBox(height: 80.h),
+                Image.asset(
+                  ImagerUrl.logo,
+                  height: 300.h,
+                  width: 450.w,
+                  fit: BoxFit.contain,
+                ),
+                SizedBox(height: 60.h),
                 SizedBox(
                   width: MediaQuery.of(context).size.width / 2,
                   child: TextField(
@@ -248,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       CommonFunction().showmessgae("LogIn Success", true);
                       //context.fadePushRemoveUntil(const HomeScreen());
                       Navigator.push(context, MaterialPageRoute(builder: (context) {
-                        return FoodKioskScreen();
+                        return KioskHomeScreen();
                       },));
                     } else if (state is LoginFailure) {
 

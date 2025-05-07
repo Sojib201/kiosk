@@ -7,27 +7,33 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kiosk/src/core/constants/const_string.dart';
 import 'package:kiosk/src/core/constants/hive_constants.dart';
 import 'package:kiosk/src/core/utils/color_utils.dart';
-import 'package:kiosk/src/data/datasources/local/local_data_source.dart';
 import 'package:kiosk/src/data/models/settings_mode.dart';
-import 'package:kiosk/src/features/item_screen/widgets/catagory/category_widget.dart';
-import 'package:kiosk/src/features/item_screen/widgets/home_banner_slider.dart';
-import 'package:kiosk/src/features/item_screen/widgets/item_card.dart';
-import 'package:kiosk/src/features/item_screen/widgets/order_cart_widget.dart';
-import 'package:kiosk/src/features/item_screen/widgets/tag_widget.dart';
+import 'package:kiosk/src/features/home_screen/widgets/add_item_popup/selected_item_popup.dart';
+import 'package:kiosk/src/features/home_screen/widgets/catagory/category_widget.dart';
+import 'package:kiosk/src/features/home_screen/widgets/home_banner_slider.dart';
+import 'package:kiosk/src/features/home_screen/widgets/item_card.dart';
+import 'package:kiosk/src/features/home_screen/widgets/order_cart_widget.dart';
+import 'package:kiosk/src/features/home_screen/widgets/tag_widget.dart';
+import '../../data/models/order_model.dart';
 import 'app_drawer/AppDrawer.dart';
+import 'bloc/item_screen_bloc/cart_bloc/cart_event.dart';
 import 'bloc/item_screen_bloc/item_screen_bloc.dart';
 import 'bloc/item_screen_bloc/item_show_bloc/item_show_bloc.dart';
 import 'bloc/item_screen_bloc/item_show_bloc/item_show_event.dart';
 import 'bloc/item_screen_bloc/item_show_bloc/item_show_state.dart';
 
-class FoodKioskScreen extends StatefulWidget {
-  const FoodKioskScreen({super.key});
+
+
+OrderSingleton orderModel = OrderSingleton();
+
+class KioskHomeScreen extends StatefulWidget {
+  const KioskHomeScreen({super.key});
 
   @override
-  State<FoodKioskScreen> createState() => _FoodKioskScreenState();
+  State<KioskHomeScreen> createState() => _KioskHomeScreenState();
 }
 
-class _FoodKioskScreenState extends State<FoodKioskScreen> {
+class _KioskHomeScreenState extends State<KioskHomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<ItemList> itemList = [];
   AllSettings? allSettings;
@@ -62,13 +68,6 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
   @override
   void initState() {
     super.initState();
-
-    // context.read<CategorycuisinBloc>().add(CategorycuisinloadedEvent(allSettings: widget.allSettings, isCat: true, isFood: true));
-    // context.read<ItemScreenBloc>().add(
-    //   SearchItemEvent(allSettings!.category!.first.categoryList!.first.categoryName!, allSettings!.itemList ?? []),
-    // );
-    //context.read<OrderBloc>().add(AddOrderItem({}));
-
     context.read<ItemScreenBloc>().add(
           GetAllResturantData(false),
         );
@@ -81,8 +80,6 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
     // final double containerWidth = tablet
     //     ? (MediaQuery.of(context).size.width * 0.14).w
     //     : (MediaQuery.of(context).size.width * 0.22).w;
-
-
 
     return Scaffold(
       key: _scaffoldKey,
@@ -213,9 +210,11 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                                     icon: Icon(
                                       Icons.cancel_outlined,
                                       color: ColorUtils.secondaryColor,
+                                      size: 28.h,
                                     ),
                                   ),
                                   hintText: "Search",
+                                  hintStyle: TextStyle(fontSize: 19.sp),
                                   filled: true,
                                   fillColor: ColorUtils.primaryColor,
                                   contentPadding: EdgeInsets.symmetric(
@@ -269,7 +268,6 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                         CategoryWidget(
                           selectedCategory: (selectedCategoryFromWidget) {
                             selectedCategory =selectedCategoryFromWidget;
-
                               context.read<ItemShowBloc>().add(
                                 FilterItemEvent(
                                   allSettings: state.allSettings,
@@ -595,7 +593,7 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                                               padding: EdgeInsets.symmetric(
                                                   horizontal: 6.w),
                                               child: Text(
-                                                '',
+                                                'All Items',
                                                 style: TextStyle(
                                                     fontSize: 22.sp,
                                                     fontWeight:
@@ -617,8 +615,16 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                                                 itemBuilder: (context, index) {
                                                   ItemList itemmodel = state
                                                       .items[index];
+                                                  print('imgurl: ${itemmodel.imageUrl.toString()}');
                                                   return ItemCard(
-                                                    onTap: () {},
+                                                    onTap: () {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext context) {
+                                                          return SelectedItemPopup(item:itemmodel );
+                                                        },
+                                                      );
+                                                    },
                                                     itemName:
                                                     itemmodel.foodName!,
                                                     time: '20 min',
@@ -633,10 +639,7 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                                                         .toString()
                                                         : itemmodel.unitPrice
                                                         .toString(),
-                                                    imageUrl: itemmodel
-                                                        .imageUrl!.isEmpty
-                                                        ? ""
-                                                        : itemmodel.foodId!,
+                                                    imageUrl: itemmodel.imageUrl!.isEmpty ? "" : itemmodel.foodId!,
                                                   );
                                                 },
                                               ),
@@ -677,7 +680,14 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                                                   allSettings!.itemList![index];
                                               itemList=allSettings!.itemList!;
                                               return ItemCard(
-                                                onTap: () {},
+                                                onTap: () {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext context) {
+                                                      return SelectedItemPopup(item:itemmodel );
+                                                    },
+                                                  );
+                                                },
                                                 itemName: itemmodel.foodName!,
                                                 time: '20 min',
                                                 ratings: '⭐ 4.5',
@@ -755,13 +765,31 @@ class _FoodKioskScreenState extends State<FoodKioskScreen> {
                                   },
                                 ),
                               ),
-                              OrderCartWidget(
-                                title: "Your Order",
-                                itemCount: 2,
-                                price: 50.50,
-                                onCancel: () {},
-                                onOrder: () {},
+                              // OrderCartWidget(
+                              //   title: "Your Order",
+                              //   orderCount: 2,
+                              //   price: 50.50,
+                              //   onCancel: () {},
+                              //   onOrder: () {},
+                              // ),
+                              BlocBuilder<CartBloc, CartState>(
+                                builder: (context, state) {
+                                  if (state.items.isNotEmpty) {
+                                    return OrderCartWidget(
+                                      title: "Your Order",
+                                      orderCount: state.totalCount,
+                                      price: state.totalPrice,
+                                      onCancel: () => context.read<CartBloc>().add(ClearCart()),
+                                      onOrder: () {
+                                        // Handle order submit
+                                      },
+                                    );
+                                  }
+                                  return OrderCartWidget(title: "Your Order", orderCount: 0, price: 0, onCancel:(){}, onOrder:(){});
+
+                                },
                               ),
+
                             ],
                           ),
                         )

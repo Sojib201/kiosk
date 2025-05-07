@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiosk/src/core/utils/color_utils.dart';
 import 'package:kiosk/src/data/models/settings_mode.dart';
-import 'package:kiosk/src/features/item_screen/bloc/item_screen_bloc/item_show_bloc/item_show_bloc.dart';
-import 'package:kiosk/src/features/item_screen/widgets/category_item_widget.dart';
-
-import '../../bloc/item_screen_bloc/item_show_bloc/item_show_event.dart';
+import '../category_item_widget.dart';
 
 
 class CategoryWidget extends StatefulWidget {
@@ -51,6 +47,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
 
         itemCount:  categoryList.length,
         itemBuilder: (context, index) {
+          print('image: ${categoryList[index].imageUrl.toString() }');
           final category = categoryList[index];
           return Padding(
             padding:  EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
@@ -112,7 +109,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               },
 
               categoryName: category.categoryName ?? '',
-              imageUrl: category.imageUrl.toString() ,
+              // imageUrl: category.imageUrl??'' ,
+              imageUrl: category.imageUrl!.isEmpty? "": category.categoryName??'',
             ),
           );
         },

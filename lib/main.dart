@@ -3,14 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:kiosk/src/core/constants/hive_constants.dart';
-import 'package:kiosk/src/features/item_screen/app_drawer/bloc/appdware_bloc.dart';
-import 'package:kiosk/src/features/item_screen/bloc/item_screen_bloc/item_screen_bloc.dart';
-import 'package:kiosk/src/features/item_screen/bloc/item_screen_bloc/item_show_bloc/item_show_bloc.dart';
-import 'package:kiosk/src/features/item_screen/item_home_screen.dart';
-import 'package:kiosk/src/features/item_screen/widgets/catagory/bloc/category_bloc.dart';
+import 'package:kiosk/src/features/home_screen/app_drawer/bloc/appdware_bloc.dart';
+import 'package:kiosk/src/features/home_screen/bloc/item_screen_bloc/cart_bloc/cart_event.dart';
+import 'package:kiosk/src/features/home_screen/bloc/item_screen_bloc/item_screen_bloc.dart';
+import 'package:kiosk/src/features/home_screen/bloc/item_screen_bloc/item_show_bloc/item_show_bloc.dart';
+import 'package:kiosk/src/features/home_screen/widgets/add_item_popup/bloc/food_portion/food_portion_bloc.dart';
+import 'package:kiosk/src/features/home_screen/widgets/add_item_popup/bloc/qty_inc_dec/qty_inc_dec_bloc.dart';
+import 'package:kiosk/src/features/home_screen/widgets/catagory/bloc/category_bloc.dart';
 import 'package:kiosk/src/features/log_in_screen/bloc/login_bloc.dart';
-import 'package:kiosk/src/features/log_in_screen/login_screen.dart';
 import 'package:kiosk/src/features/registration_screen/bloc/registration_bloc.dart';
+import 'package:kiosk/src/features/splash_screen.dart';
 
 
 
@@ -48,6 +50,15 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => ItemShowBloc(),
         ),
+        BlocProvider(
+          create: (context) => FoodPortionSizeBloc(),
+        ),
+        BlocProvider(
+          create: (context) => QtyIncDecBloc(),
+        ),
+        BlocProvider(
+          create: (context)=>CartBloc(),
+        )
       ],
       child: ScreenUtilInit(
       
@@ -64,8 +75,9 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
             useMaterial3: true,
           ),
-           home: const FoodKioskScreen(),
+           //home: const KioskHomeScreen(),
           //home: LoginScreen()
+          home: SplashScreen(),
         ),
       ),
     );

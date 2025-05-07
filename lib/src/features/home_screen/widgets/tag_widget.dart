@@ -28,14 +28,15 @@ class TagWidget extends StatelessWidget {
             color: isSelected ? Colors.deepOrange : ColorUtils.primaryColor,
           borderRadius: BorderRadius.circular(14.r),
             boxShadow: [
+              isSelected ?
               BoxShadow(
                 color: ColorUtils.black.withOpacity(0.2),
                 blurRadius: 6.r,
                 spreadRadius: 0,
-                offset: const Offset(0, 60),
-              ),
-            ]
-               ,
+                offset: const Offset(0, 2),
+              ):
+                  BoxShadow()
+            ],
         ),
         child: Center(
           child: Text(
