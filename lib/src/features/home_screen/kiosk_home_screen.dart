@@ -810,3 +810,5 @@ class _KioskHomeScreenState extends State<KioskHomeScreen> {
     );
   }
 }
+
+enum DiscountType { percentage, fixed }

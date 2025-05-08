@@ -9,6 +9,8 @@ import '../../../../core/shared/common/common_function.dart';
 import '../../../../core/utils/style.dart';
 import '../../../../data/models/settings_mode.dart';
 import '../../../../core/utils/color_utils.dart';
+import '../../bloc/add_to_cart/order_bloc.dart';
+import '../../bloc/item_screen_bloc/cart_bloc/cart_event.dart';
 import '../cached_network_widget.dart';
 import 'bloc/food_portion/food_portion_bloc.dart';
 import 'bloc/food_portion/food_portion_event.dart';
@@ -35,9 +37,7 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
 
   @override
   void initState() {
-    context
-        .read<FoodPortionSizeBloc>()
-        .add(GetInitEvent(itemList: widget.item));
+    context.read<FoodPortionSizeBloc>().add(GetInitEvent(itemList: widget.item));
     super.initState();
   }
 
@@ -68,7 +68,7 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
             ),
             child: Padding(
               padding:
-                  EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                  EdgeInsets.symmetric(horizontal: 20.w,vertical: 18.h),
               child:
                   BlocConsumer<FoodPortionSizeBloc, FoodPortionSizeState>(
                 listener: (context, state) {},
@@ -78,22 +78,6 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // if (widget.item.imageUrl != null &&
-                              //     widget.item.imageUrl!.isNotEmpty)
-                              //   ClipRRect(
-                              //     borderRadius:
-                              //         BorderRadius.circular(10.r),
-                              //     child: ImageShow(
-                              //       imageUrl: CommonFunction()
-                              //           .makeImageUrl(widget.item.foodId
-                              //               .toString()),
-                              //       height: 200.h,
-                              //       width: double.infinity,
-                              //       isLocal:
-                              //           widget.item.imageUrl!.isNotEmpty,
-                              //       fit: BoxFit.fill,
-                              //     ),
-                              //   ),
                               Stack(
                                 children: [
                                   if (widget.item.imageUrl != null &&
@@ -106,7 +90,7 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                             .makeImageUrl(widget
                                                 .item.foodId
                                                 .toString()),
-                                        height: 200.h,
+                                        height: 220.h,
                                         width: double.infinity,
                                         isLocal: widget
                                             .item.imageUrl!.isNotEmpty,
@@ -121,6 +105,7 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                     child: Container(
                                       height: 500.h,
                                       decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(14.r),
                                         gradient: LinearGradient(
                                           begin: Alignment.bottomCenter,
                                           end: Alignment.topCenter,
@@ -134,48 +119,25 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                       ),
                                     ),
                                   ),
-                                  // Positioned(
-                                  //   // bottom: 80.h,
-                                  //   // left: 32.w,
-                                  //   // right: 5.w,
-                                  //   //  top: 10.h,
-                                  //   bottom: 0.h,
-                                  //   left: 0.w,
-                                  //   right: 0.w,
-                                  //   child: Text(
-                                  //     widget.item.foodName.toString(),
-                                  //     maxLines: 2,
-                                  //     style: TextStyle(
-                                  //       color: Colors.white,
-                                  //       fontSize: 20.sp,
-                                  //       fontWeight: FontWeight.bold,
-                                  //     ),
-                                  //   ),
-                                  // ),
                                 ],
                               ),
                               SizedBox(
                                 height: 20.h,
                               ),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Name:',
-                                    style: MyStyle.heading10.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 24.sp),
+                                    style: MyStyle.heading10.copyWith(fontWeight: FontWeight.bold, fontSize: 24.sp),
                                   ),
                                   Container(
                                     height: 50.h,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 8.w),
+                                    padding: EdgeInsets.symmetric(horizontal: 8.w),
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                           width: 0.8.w,
-                                          color:
-                                              ColorUtils.secondaryColor),
+                                          color: ColorUtils.secondaryColor),
                                       borderRadius:
                                           BorderRadius.circular(14.r),
                                     ),
@@ -183,11 +145,7 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                       child: Center(
                                         child: Text(
                                           "Price: ${state.finalFoodPrice}",
-                                          style: MyStyle.heading10
-                                              .copyWith(
-                                                  fontWeight:
-                                                      FontWeight.w500,
-                                                  fontSize: 22.sp),
+                                          style: MyStyle.heading10.copyWith(fontWeight: FontWeight.w500, fontSize: 22.sp),
                                         ),
                                       ),
                                     ),
@@ -197,9 +155,7 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                               SizedBox(height: 4.h),
                               Text(
                                 widget.item.foodName.toString(),
-                                style: MyStyle.heading12.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 21.sp),
+                                style: MyStyle.heading12.copyWith(fontWeight: FontWeight.w500, fontSize: 21.sp),
                                 maxLines: 2,
                               ),
                               SizedBox(height: 20.h),
@@ -214,49 +170,77 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                 child: SingleChildScrollView(
                                   child: Text(
                                     widget.item.foodDescription.toString(),
-                                    style: MyStyle.heading5
-                                        .copyWith(fontSize: 20.sp),
+                                    style: MyStyle.heading5.copyWith(fontSize: 20.sp),
                                     maxLines: 10,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 30.h),
+                              SizedBox(height: 10.h),
 
-                              // widget.item.foodPortions!.isNotEmpty ? Text('Types', style: MyStyle.heading10.copyWith(fontSize: 22.sp),) : const SizedBox.shrink(),
-                              Text(
-                                'Types',
-                                style: MyStyle.heading10
-                                    .copyWith(fontSize: 24.sp),
-                              ),
+                              widget.item.foodPortions!.isNotEmpty ? Text('Types', style: MyStyle.heading10
+                                   .copyWith(fontSize: 24.sp),) : const SizedBox.shrink(),
                               SizedBox(height: 6.h),
                               SizedBox(
                                 height: 36.h,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  //itemCount: widget.item.foodPortions!.length,
-                                  itemCount: 10,
+                                  itemCount: widget.item.foodPortions!.length,
+                                  //itemCount: 6,
                                   itemBuilder: (context, index) {
-                                    //FoodPortion typemodel = widget.item.foodPortions![index];
+                                    FoodPortion typemodel = widget.item.foodPortions![index];
                                     return TypeWidget(
-                                      // type: typemodel.portionSize.toString(),
-                                      type: 'Large',
+                                      type: typemodel.portionSize.toString(),
+                                      //type: 'Medium',
                                       isSelected:
-                                          index == state.selectedIndex,
+                                      index == state.selectedIndex,
                                       onTap: () {
-                                        // print('hnsdfjk');
-                                        // context.read<FoodPortionSizeBloc>().add(
-                                        //   SelectPortionEvent(
-                                        //     selectIndex: index,
-                                        //     //item: widget.item,
-                                        //     item: widget.item,
-                                        //   ),
-                                        // );
+                                        print('hnsdfjk');
+                                        context.read<FoodPortionSizeBloc>().add(
+                                          SelectPortionEvent(
+                                            selectIndex: index,
+                                            //item: widget.item,
+                                            item: widget.item,
+                                          ),
+                                        );
                                       },
                                     );
                                   },
                                 ),
                               ),
+                              // Text(
+                              //   'Types',
+                              //   style: MyStyle.heading10
+                              //       .copyWith(fontSize: 24.sp),
+                              // ),
+                              // SizedBox(height: 6.h),
+                              // SizedBox(
+                              //   height: 36.h,
+                              //   child: ListView.builder(
+                              //     scrollDirection: Axis.horizontal,
+                              //     //itemCount: widget.item.foodPortions!.length,
+                              //     itemCount: 6,
+                              //     itemBuilder: (context, index) {
+                              //       //FoodPortion typemodel = widget.item.foodPortions![index];
+                              //       return TypeWidget(
+                              //         //type: typemodel.portionSize.toString(),
+                              //         type: 'Medium',
+                              //         isSelected:
+                              //         index == state.selectedIndex,
+                              //         onTap: () {
+                              //           // print('hnsdfjk');
+                              //           // context.read<FoodPortionSizeBloc>().add(
+                              //           //   SelectPortionEvent(
+                              //           //     selectIndex: index,
+                              //           //     //item: widget.item,
+                              //           //     item: widget.item,
+                              //           //   ),
+                              //           // );
+                              //         },
+                              //       );
+                              //     },
+                              //   ),
+                              // ),
                               SizedBox(height: 30.h),
                               Row(
                                 mainAxisAlignment:
@@ -289,6 +273,7 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                     ],
                                   ),
                                   Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       SizedBox(
                                         height: 40.h,
@@ -318,57 +303,37 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                       BlocConsumer<QtyIncDecBloc,
                                           QtyIncDecState>(
                                         listener: (context, state) {
-                                          if (state
-                                              is QtyIncDecStateResult) {
+                                          if (state is QtyIncDecStateResult) {
                                             log("bbbbbbbbbb");
-                                            _controller.text =
-                                                state.qty.toString();
+                                            _controller.text = state.qty.toString();
                                           }
                                         },
                                         builder: (context, state) {
-                                          int currentQty = (state
-                                                  is QtyIncDecStateResult)
-                                              ? state.qty
-                                              : 1;
+                                          int currentQty = (state is QtyIncDecStateResult) ? state.qty : 1;
 
-                                          _controller.text =
-                                              currentQty.toString();
+                                          _controller.text = currentQty.toString();
 
                                           return Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceEvenly,
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                             children: [
                                               GestureDetector(
                                                 onTap: () {
                                                   if (currentQty > 1) {
-                                                    context
-                                                        .read<
-                                                            QtyIncDecBloc>()
-                                                        .add(
-                                                          QtyIncDecPerform(
-                                                              qty:
-                                                                  currentQty -
-                                                                      1),
-                                                        );
+                                                    context.read<QtyIncDecBloc>().add(QtyIncDecPerform(qty: currentQty - 1),);
                                                   }
                                                 },
                                                 child: Container(
                                                   height: 40.h,
                                                   width: 40.w,
-                                                  decoration:
-                                                      BoxDecoration(
-                                                    color: ColorUtils
-                                                        .redColor,
-                                                    shape:
-                                                        BoxShape.circle,
+                                                  decoration: BoxDecoration(
+                                                    color: ColorUtils.redColor,
+                                                    shape: BoxShape.circle,
                                                   ),
                                                   child: Center(
                                                     child: Icon(
                                                         Icons.remove,
-                                                        color:
-                                                            Colors.white,
-                                                        size: 40.h),
+                                                        color: Colors.white,
+                                                        size: 35.h),
                                                   ),
                                                 ),
                                               ),
@@ -376,41 +341,21 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                                 width: 10.w,
                                               ),
                                               SizedBox(
-                                                width: 60.w,
-                                                height: 60.h,
+                                                width: 50.w,
+                                                height: 50.h,
                                                 child: TextField(
-                                                  textAlign:
-                                                      TextAlign.center,
-                                                  style: MyStyle.heading4
-                                                      .copyWith(
-                                                          fontSize:
-                                                              22.sp),
+                                                  textAlign: TextAlign.center,
+                                                  style: MyStyle.heading4.copyWith(fontSize: 21.sp),
                                                   controller: _controller,
-                                                  keyboardType:
-                                                      TextInputType
-                                                          .number,
-                                                  decoration:
-                                                      InputDecoration(
-                                                    border:
-                                                        const OutlineInputBorder(),
-                                                    contentPadding:
-                                                        EdgeInsets
-                                                            .symmetric(
-                                                                vertical:
-                                                                    10.h),
-                                                  ),
+                                                  keyboardType: TextInputType.number,
+                                                  decoration: InputDecoration(
+                                                    border: const OutlineInputBorder(),
+                                                    contentPadding: EdgeInsets.symmetric(vertical: 9.h),
+                                                      ),
                                                   onChanged: (value) {
-                                                    final int? qty =
-                                                        int.tryParse(
-                                                            value);
+                                                    final int? qty = int.tryParse(value);
                                                     if (qty != null) {
-                                                      context
-                                                          .read<
-                                                              QtyIncDecBloc>()
-                                                          .add(
-                                                            QtyIncDecPerform(
-                                                                qty: qty),
-                                                          );
+                                                      context.read<QtyIncDecBloc>().add(QtyIncDecPerform(qty: qty),);
                                                     }
                                                   },
                                                 ),
@@ -421,31 +366,21 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                               GestureDetector(
                                                 onTap: () {
                                                   log("clicked");
-                                                  context
-                                                      .read<
-                                                          QtyIncDecBloc>()
-                                                      .add(
-                                                        QtyIncDecPerform(
-                                                            qty:
-                                                                currentQty +
-                                                                    1),
-                                                      );
+                                                  context.read<QtyIncDecBloc>().add(QtyIncDecPerform(qty: currentQty + 1),);
                                                 },
                                                 child: Container(
                                                   height: 40.h,
                                                   width: 40.w,
                                                   decoration:
                                                       BoxDecoration(
-                                                    color: ColorUtils
-                                                        .redColor,
-                                                    shape:
-                                                        BoxShape.circle,
+                                                    color: ColorUtils.redColor,
+                                                    shape: BoxShape.circle,
                                                   ),
                                                   child: Center(
-                                                    child: Icon(Icons.add,
-                                                        color:
-                                                            Colors.white,
-                                                        size: 40.h),
+                                                    child: Icon(
+                                                        Icons.add,
+                                                        color: Colors.white,
+                                                        size: 35.h),
                                                   ),
                                                 ),
                                               ),
@@ -455,17 +390,13 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                       ),
                                       SizedBox(height: 20.h),
                                       widget.item.addonList!.isNotEmpty
-                                          ? Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceEvenly,
+                                          ?
+                                      Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Text(
                                                   'Add-Extra',
-                                                  style: MyStyle.heading9
-                                                      .copyWith(
-                                                          fontSize:
-                                                              20.sp),
+                                                  style: MyStyle.heading9.copyWith(fontSize: 20.sp),
                                                 ),
                                                 SizedBox(width: 20.w),
                                               ],
@@ -486,23 +417,19 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                     onTap: () =>
                                         Navigator.pop(context),
                                     child: Container(
-                                      width: 120.w,
+                                      width: 130.w,
                                       height: 50.h,
                                       padding: EdgeInsets.symmetric(horizontal: 8.w),
                                       decoration: BoxDecoration(
                                         color:
                                         ColorUtils.redColor,
                                         borderRadius:
-                                        BorderRadius.circular(
-                                            14.r),
+                                        BorderRadius.circular(14.r),
                                       ),
                                       child: Center(
                                         child: Text(
                                           'Cancel',
-                                          style: MyStyle.heading7
-                                              .copyWith(
-                                              fontSize:
-                                              24.sp),
+                                          style: MyStyle.heading7.copyWith(fontSize: 24.sp),
                                         ),
                                       ),
                                     ),
@@ -511,79 +438,81 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                     width: 30.h,
                                   ),
                                   GestureDetector(
-                                    onTap: () async {
-                                      double itemTotal = (widget.item.foodPortions!.isNotEmpty ? (widget.item.foodPortions![state.selectedIndex].portionPrice! * int.parse(_controller.text))
-                                          : (double.parse(widget.item.unitPrice.toString()) * int.parse(_controller.text)));
-                                      double itemDiscount = widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionDiscount! : widget.item.discount! * int.parse(_controller.text);
-                                      // context.read<OrderBloc>().add(AddOrderItem(
-                                      //
-                                      //   // {
-                                      //   //     "item_id": widget.item.foodId,
-                                      //   //     "item_name": widget.item.foodName,
-                                      //   //     "item_type": widget.item.itemType,
-                                      //   //     "portion_size": widget.item.foodPortion!.isNotEmpty ? widget.item.foodPortion![state.selectedIndex].portionSize : "",
-                                      //   //     "unit_price": widget.item.foodPortion!.isNotEmpty ? double.parse(widget.item.foodPortion![state.selectedIndex].portionPrice!) : double.parse(widget.item.unitPrice!).toStringAsFixed(2),
-                                      //   //     "quantity": int.parse(_controller.text),
-                                      //   //     "bonus_qty": 0,
-                                      //   //     "total_price": (itemTotal - itemDiscount).toStringAsFixed(2),
-                                      //   //     "promotion_refarence": "",
-                                      //   //     "promotion_type": "",
-                                      //   //     "item_discount": itemDiscount.toStringAsFixed(2),
-                                      //   //     "item_tax": 0.00,
-                                      //   //     "item_total": itemTotal.toStringAsFixed(2)
-                                      //   //   },
-                                      //
-                                      //     {
-                                      //       "item_id": widget.item.foodId,
-                                      //       "item_name": widget.item.foodName,
-                                      //       "portion_size": widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionSize : "",
-                                      //       "item_type": widget.item.itemType,
-                                      //       "quantity": int.parse(_controller.text),
-                                      //       "bonus_quantity": 0,
-                                      //       "unit_price": widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionPrice! : widget.item.unitPrice!,
-                                      //       "total_tp": itemTotal,
-                                      //       "total_tax": widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionTax! : widget.item.tax,
-                                      //       "discount": itemDiscount,
-                                      //       "grand_total": (itemTotal - itemDiscount),
-                                      //       "promotion_type": "",
-                                      //       "promotion_refarence": "",
-                                      //       "note": _commentController.text
-                                      //     }));
+                                    // onTap: () async {
+                                    //   double itemTotal = (widget.item.foodPortions!.isNotEmpty ? (widget.item.foodPortions![state.selectedIndex].portionPrice! * int.parse(_controller.text))
+                                    //       : (double.parse(widget.item.unitPrice.toString()) * int.parse(_controller.text)));
+                                    //   double itemDiscount = widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionDiscount! : widget.item.discount! * int.parse(_controller.text);
+                                    //   context.read<OrderBloc>().add(AddOrderItem(
+                                    //
+                                    //
+                                    //
+                                    //       {
+                                    //         "item_id": widget.item.foodId,
+                                    //         "item_name": widget.item.foodName,
+                                    //         "portion_size": widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionSize : "",
+                                    //         "item_type": widget.item.itemType,
+                                    //         "quantity": int.parse(_controller.text),
+                                    //         "bonus_quantity": 0,
+                                    //         "unit_price": widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionPrice! : widget.item.unitPrice!,
+                                    //         "total_tp": itemTotal,
+                                    //         "total_tax": widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionTax! : widget.item.tax,
+                                    //         "discount": itemDiscount,
+                                    //         "grand_total": (itemTotal - itemDiscount),
+                                    //         "promotion_type": "",
+                                    //         "promotion_refarence": "",
+                                    //         "note": _commentController.text
+                                    //       }));
+                                    //
+                                    //   _controller.clear();
+                                    //
+                                    //   Navigator.pop(context);
+                                    // },
 
-                                      _controller.clear();
+                                    onTap: () {
+                                      final qtyState = context.read<QtyIncDecBloc>().state;
+                                      int quantity = 1;
+                                      if (qtyState is QtyIncDecStateResult) {
+                                        quantity = qtyState.qty;
+                                      }
+                                      final portionSize = widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionSize:"";
 
+                                      double? itemTotal = widget.item.foodPortions!.isNotEmpty
+                                          ? widget.item.foodPortions!.first.portionPrice
+                                          : widget.item.unitPrice;
+
+                                      context.read<CartBloc>().add(
+                                        AddToCart(CartItem(
+                                          title: widget.item.foodName!,
+                                          price: itemTotal!,
+                                          quantity: quantity,
+                                          comment: _commentController.text,
+                                          portionSize: portionSize!
+                                        )),
+                                      );
                                       Navigator.pop(context);
                                     },
                                     child: Container(
-                                      width: 120.w,
+                                      width: 130.w,
                                       height: 50.h,
                                       padding: EdgeInsets.symmetric(horizontal: 8.w),
                                       decoration: BoxDecoration(
                                         color:
                                         ColorUtils.greenColor,
                                         borderRadius:
-                                        BorderRadius.circular(
-                                            14.r),
+                                        BorderRadius.circular(14.r),
                                       ),
                                       child: Center(
                                         child: Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .spaceEvenly,
+                                          MainAxisAlignment.spaceEvenly,
                                           children: [
                                             Text(
                                               'Cart',
-                                              style: MyStyle
-                                                  .heading7
-                                                  .copyWith(
-                                                  fontSize:
-                                                  24.sp),
+                                              style: MyStyle.heading7.copyWith(fontSize: 24.sp),
                                             ),
                                             Icon(
-                                              Icons
-                                                  .shopping_cart_rounded,
-                                              color: ColorUtils
-                                                  .primaryColor,
+                                              Icons.shopping_cart_rounded,
+                                              color: ColorUtils.primaryColor,
                                             ),
                                           ],
                                         ),

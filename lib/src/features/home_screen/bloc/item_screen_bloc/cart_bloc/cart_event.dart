@@ -5,8 +5,10 @@ class CartItem {
   final String title;
   final double price;
   final int quantity;
+  final String comment;
+  final String portionSize;
 
-  CartItem({required this.title, required this.price, this.quantity = 1});
+  CartItem({required this.title, required this.price, this.quantity = 1,required this.comment, required this.portionSize});
 }
 
 abstract class CartEvent {}

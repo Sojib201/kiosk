@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:kiosk/src/core/constants/hive_constants.dart';
 import 'package:kiosk/src/features/home_screen/app_drawer/bloc/appdware_bloc.dart';
+import 'package:kiosk/src/features/home_screen/bloc/add_to_cart/order_bloc.dart';
 import 'package:kiosk/src/features/home_screen/bloc/item_screen_bloc/cart_bloc/cart_event.dart';
 import 'package:kiosk/src/features/home_screen/bloc/item_screen_bloc/item_screen_bloc.dart';
 import 'package:kiosk/src/features/home_screen/bloc/item_screen_bloc/item_show_bloc/item_show_bloc.dart';
@@ -58,7 +59,10 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context)=>CartBloc(),
-        )
+        ),
+        BlocProvider(
+          create: (context) => OrderBloc(),
+        ),
       ],
       child: ScreenUtilInit(
       
