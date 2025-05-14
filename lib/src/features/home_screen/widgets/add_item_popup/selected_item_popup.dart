@@ -10,7 +10,6 @@ import '../../../../core/utils/style.dart';
 import '../../../../data/models/settings_mode.dart';
 import '../../../../core/utils/color_utils.dart';
 import '../../bloc/add_to_cart/order_bloc.dart';
-import '../../bloc/item_screen_bloc/cart_bloc/cart_event.dart';
 import '../cached_network_widget.dart';
 import 'bloc/food_portion/food_portion_bloc.dart';
 import 'bloc/food_portion/food_portion_event.dart';
@@ -55,7 +54,7 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
     return Dialog(
       child: SingleChildScrollView(
         child: Container(
-          height: size.height * 0.70,
+          height: size.height * 0.75,
           width: size.width * 0.80,
           child: Container(
             decoration: BoxDecoration(
@@ -86,14 +85,10 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                       borderRadius:
                                           BorderRadius.circular(10.r),
                                       child: ImageShow(
-                                        imageUrl: CommonFunction()
-                                            .makeImageUrl(widget
-                                                .item.foodId
-                                                .toString()),
-                                        height: 220.h,
+                                        imageUrl: CommonFunction().makeImageUrl(widget.item.foodId.toString()),
+                                        height: 240.h,
                                         width: double.infinity,
-                                        isLocal: widget
-                                            .item.imageUrl!.isNotEmpty,
+                                        isLocal: widget.item.imageUrl!.isNotEmpty,
                                         fit: BoxFit.fill,
                                       ),
                                     ),
@@ -111,7 +106,7 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                           end: Alignment.topCenter,
                                           colors: [
                                             ColorUtils.black
-                                                .withOpacity(0.7),
+                                                .withOpacity(0.3),
                                             ColorUtils.black
                                                 .withOpacity(0.0),
                                           ],
@@ -127,12 +122,25 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    'Name:',
-                                    style: MyStyle.heading10.copyWith(fontWeight: FontWeight.bold, fontSize: 24.sp),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Name',
+                                          style: MyStyle.heading10.copyWith(fontWeight: FontWeight.bold, fontSize: 24.sp),
+                                        ),
+                                       // SizedBox(height: 4.h),
+                                        Text(
+                                          widget.item.foodName.toString(),
+                                          style: MyStyle.heading12.copyWith(fontWeight: FontWeight.w400, fontSize: 20.sp),
+                                          maxLines: 2,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   Container(
-                                    height: 50.h,
+                                    height: 45.h,
                                     padding: EdgeInsets.symmetric(horizontal: 8.w),
                                     decoration: BoxDecoration(
                                       border: Border.all(
@@ -145,19 +153,14 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                       child: Center(
                                         child: Text(
                                           "Price: ${state.finalFoodPrice}",
-                                          style: MyStyle.heading10.copyWith(fontWeight: FontWeight.w500, fontSize: 22.sp),
+                                          style: MyStyle.heading10.copyWith(fontWeight: FontWeight.w500, fontSize: 20.sp),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 4.h),
-                              Text(
-                                widget.item.foodName.toString(),
-                                style: MyStyle.heading12.copyWith(fontWeight: FontWeight.w500, fontSize: 21.sp),
-                                maxLines: 2,
-                              ),
+
                               SizedBox(height: 20.h),
                               Text(
                                 'Description',
@@ -170,7 +173,7 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                 child: SingleChildScrollView(
                                   child: Text(
                                     widget.item.foodDescription.toString(),
-                                    style: MyStyle.heading5.copyWith(fontSize: 20.sp),
+                                    style: MyStyle.heading5.copyWith(fontSize: 20.sp,fontWeight: FontWeight.w400),
                                     maxLines: 10,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -414,8 +417,7 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   GestureDetector(
-                                    onTap: () =>
-                                        Navigator.pop(context),
+                                    onTap: () => Navigator.pop(context),
                                     child: Container(
                                       width: 130.w,
                                       height: 50.h,
@@ -438,59 +440,59 @@ class _SelectedItemPopupState extends State<SelectedItemPopup> {
                                     width: 30.h,
                                   ),
                                   GestureDetector(
-                                    // onTap: () async {
-                                    //   double itemTotal = (widget.item.foodPortions!.isNotEmpty ? (widget.item.foodPortions![state.selectedIndex].portionPrice! * int.parse(_controller.text))
-                                    //       : (double.parse(widget.item.unitPrice.toString()) * int.parse(_controller.text)));
-                                    //   double itemDiscount = widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionDiscount! : widget.item.discount! * int.parse(_controller.text);
-                                    //   context.read<OrderBloc>().add(AddOrderItem(
-                                    //
-                                    //
-                                    //
-                                    //       {
-                                    //         "item_id": widget.item.foodId,
-                                    //         "item_name": widget.item.foodName,
-                                    //         "portion_size": widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionSize : "",
-                                    //         "item_type": widget.item.itemType,
-                                    //         "quantity": int.parse(_controller.text),
-                                    //         "bonus_quantity": 0,
-                                    //         "unit_price": widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionPrice! : widget.item.unitPrice!,
-                                    //         "total_tp": itemTotal,
-                                    //         "total_tax": widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionTax! : widget.item.tax,
-                                    //         "discount": itemDiscount,
-                                    //         "grand_total": (itemTotal - itemDiscount),
-                                    //         "promotion_type": "",
-                                    //         "promotion_refarence": "",
-                                    //         "note": _commentController.text
-                                    //       }));
-                                    //
-                                    //   _controller.clear();
-                                    //
-                                    //   Navigator.pop(context);
-                                    // },
+                                    onTap: () async {
+                                      double itemTotal = (widget.item.foodPortions!.isNotEmpty ? (widget.item.foodPortions![state.selectedIndex].portionPrice! * int.parse(_controller.text))
+                                          : (double.parse(widget.item.unitPrice.toString()) * int.parse(_controller.text)));
+                                      double itemDiscount = widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionDiscount! : widget.item.discount! * int.parse(_controller.text);
+                                      print('before clear controller:${_controller.text}');
+                                      context.read<OrderBloc>().add(AddOrderItem(
+                                          {
+                                            "item_id": widget.item.foodId,
+                                            "item_name": widget.item.foodName,
+                                            "portion_size": widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionSize : "",
+                                            "item_type": widget.item.itemType,
+                                            "quantity": int.parse(_controller.text),
+                                            "bonus_quantity": 0,
+                                            "unit_price": widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionPrice! : widget.item.unitPrice!,
+                                            "total_tp": itemTotal,
+                                            "total_tax": widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionTax! : widget.item.tax,
+                                            "discount": itemDiscount,
+                                            "grand_total": (itemTotal - itemDiscount),
+                                            "promotion_type": "",
+                                            "promotion_refarence": "",
+                                            "note": _commentController.text
+                                          }));
 
-                                    onTap: () {
-                                      final qtyState = context.read<QtyIncDecBloc>().state;
-                                      int quantity = 1;
-                                      if (qtyState is QtyIncDecStateResult) {
-                                        quantity = qtyState.qty;
-                                      }
-                                      final portionSize = widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionSize:"";
 
-                                      double? itemTotal = widget.item.foodPortions!.isNotEmpty
-                                          ? widget.item.foodPortions!.first.portionPrice
-                                          : widget.item.unitPrice;
 
-                                      context.read<CartBloc>().add(
-                                        AddToCart(CartItem(
-                                          title: widget.item.foodName!,
-                                          price: itemTotal!,
-                                          quantity: quantity,
-                                          comment: _commentController.text,
-                                          portionSize: portionSize!
-                                        )),
-                                      );
+                                      _controller.clear();
+                                      print('after clear controller:${_controller.text}');
                                       Navigator.pop(context);
                                     },
+
+                                    // onTap: () {
+                                    //   final qtyState = context.read<QtyIncDecBloc>().state;
+                                    //   int quantity = 1;
+                                    //   if (qtyState is QtyIncDecStateResult) {
+                                    //     quantity = qtyState.qty;
+                                    //   }
+                                    //   final portionSize = widget.item.foodPortions!.isNotEmpty ? widget.item.foodPortions![state.selectedIndex].portionSize:"";
+                                    //
+                                    //   double? itemTotal = widget.item.foodPortions!.isNotEmpty
+                                    //       ? widget.item.foodPortions!.first.portionPrice
+                                    //       : widget.item.unitPrice;
+                                    //
+                                    //   context.read<CartBloc>().add(
+                                    //     AddToCart(CartItem(
+                                    //       title: widget.item.foodName!,
+                                    //       price: itemTotal!,
+                                    //       quantity: quantity,
+                                    //       comment: _commentController.text,
+                                    //       portionSize: portionSize!
+                                    //     )),
+                                    //   );
+                                    //   Navigator.pop(context);
+                                    // },
                                     child: Container(
                                       width: 130.w,
                                       height: 50.h,

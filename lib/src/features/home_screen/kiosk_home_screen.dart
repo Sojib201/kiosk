@@ -1,5 +1,4 @@
-import 'dart:developer';
-import 'dart:ui';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +7,8 @@ import 'package:kiosk/src/core/constants/const_string.dart';
 import 'package:kiosk/src/core/constants/hive_constants.dart';
 import 'package:kiosk/src/core/utils/color_utils.dart';
 import 'package:kiosk/src/data/models/settings_mode.dart';
+import 'package:kiosk/src/features/home_screen/widgets/add_item_popup/bloc/qty_inc_dec/qty_inc_dec_bloc.dart';
+import 'package:kiosk/src/features/home_screen/widgets/add_item_popup/bloc/qty_inc_dec/qty_inc_dec_event.dart';
 import 'package:kiosk/src/features/home_screen/widgets/add_item_popup/selected_item_popup.dart';
 import 'package:kiosk/src/features/home_screen/widgets/catagory/category_widget.dart';
 import 'package:kiosk/src/features/home_screen/widgets/home_banner_slider.dart';
@@ -16,11 +17,13 @@ import 'package:kiosk/src/features/home_screen/widgets/order_cart_widget.dart';
 import 'package:kiosk/src/features/home_screen/widgets/tag_widget.dart';
 import '../../data/models/order_model.dart';
 import 'app_drawer/AppDrawer.dart';
+import 'bloc/add_to_cart/order_bloc.dart';
 import 'bloc/item_screen_bloc/cart_bloc/cart_event.dart';
 import 'bloc/item_screen_bloc/item_screen_bloc.dart';
 import 'bloc/item_screen_bloc/item_show_bloc/item_show_bloc.dart';
 import 'bloc/item_screen_bloc/item_show_bloc/item_show_event.dart';
 import 'bloc/item_screen_bloc/item_show_bloc/item_show_state.dart';
+
 
 
 
@@ -618,12 +621,28 @@ class _KioskHomeScreenState extends State<KioskHomeScreen> {
                                                   print('imgurl: ${itemmodel.imageUrl.toString()}');
                                                   return ItemCard(
                                                     onTap: () {
-                                                      showDialog(
-                                                        context: context,
-                                                        builder: (BuildContext context) {
-                                                          return SelectedItemPopup(item:itemmodel );
-                                                        },
-                                                      );
+
+                                                      String today = DateFormat.E().format(DateTime.now()).toLowerCase();
+                                                      DateTime now = DateTime.now();
+                                                      DateFormat format = DateFormat("hh:mm a");
+                                                      DateTime from = format.parse(itemmodel.availableTime!.availableFrom!);
+                                                      DateTime to = format.parse(itemmodel.availableTime!.availableTo!);
+                                                      DateTime nowTime = format.parse(format.format(now));
+
+                                                      if (nowTime.isAfter(from) &&
+                                                          nowTime.isBefore(to)) {
+                                                        context.read<QtyIncDecBloc>().add(const QtyIncDecPerform(qty: 1),);
+
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                              context) {
+                                                            return SelectedItemPopup(
+                                                                item:
+                                                                    itemmodel);
+                                                          },
+                                                        );
+                                                      }
                                                     },
                                                     itemName:
                                                     itemmodel.foodName!,
@@ -681,12 +700,29 @@ class _KioskHomeScreenState extends State<KioskHomeScreen> {
                                               itemList=allSettings!.itemList!;
                                               return ItemCard(
                                                 onTap: () {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (BuildContext context) {
-                                                      return SelectedItemPopup(item:itemmodel );
-                                                    },
-                                                  );
+
+                                                  String today = DateFormat.E().format(DateTime.now()).toLowerCase();
+                                                  DateTime now = DateTime.now();
+                                                  DateFormat format = DateFormat("hh:mm a");
+                                                  DateTime from = format.parse(itemmodel.availableTime!.availableFrom!);
+                                                  DateTime to = format.parse(itemmodel.availableTime!.availableTo!);
+                                                  DateTime nowTime = format.parse(format.format(now));
+
+
+                                                  if(nowTime.isAfter(from) && nowTime.isBefore(to)){
+
+                                                    context.read<QtyIncDecBloc>().add(
+                                                      const QtyIncDecPerform(qty: 1),
+                                                    );
+
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext context) {
+                                                        return SelectedItemPopup(item:itemmodel );
+                                                      },
+                                                    );
+                                                  }
+
                                                 },
                                                 itemName: itemmodel.foodName!,
                                                 time: '20 min',
@@ -765,30 +801,44 @@ class _KioskHomeScreenState extends State<KioskHomeScreen> {
                                   },
                                 ),
                               ),
-                              // OrderCartWidget(
-                              //   title: "Your Order",
-                              //   orderCount: 2,
-                              //   price: 50.50,
-                              //   onCancel: () {},
-                              //   onOrder: () {},
-                              // ),
-                              BlocBuilder<CartBloc, CartState>(
-                                builder: (context, state) {
-                                  if (state.items.isNotEmpty) {
-                                    return OrderCartWidget(
-                                      title: "Your Order",
-                                      orderCount: state.totalCount,
-                                      price: state.totalPrice,
-                                      onCancel: () => context.read<CartBloc>().add(ClearCart()),
-                                      onOrder: () {
-                                        // Handle order submit
-                                      },
-                                    );
-                                  }
-                                  return OrderCartWidget(title: "Your Order", orderCount: 0, price: 0, onCancel:(){}, onOrder:(){});
 
-                                },
-                              ),
+                              BlocBuilder<OrderBloc, OrderState>(builder: (context,state){
+                                print('state: $OrderItemShowState');
+
+                               if(state is OrderItemShowState){
+                                 print('total: ${state.total}');
+                                 print('vat: ${state.vat}');
+                                 print('discount: ${state.discount}');
+                                 int qty=0;
+                                 for (var e in orderModel.orderData.orderDetails) {
+                                   qty+= e.quantity;
+
+                                 }
+
+                                 print('qty:${qty.toString()}');
+                                  return OrderCartWidget( orderCount:qty.toString() , price: state.total, onCancel: (){}, onOrder: (){});
+                                }
+                               return OrderCartWidget( orderCount: '0', price: '0', onCancel:(){}, onOrder:(){});
+                              }),
+
+
+                              // BlocBuilder<CartBloc, CartState>(
+                              //   builder: (context, state) {
+                              //     if (state.items.isNotEmpty) {
+                              //       return OrderCartWidget(
+                              //         title: "Your Order",
+                              //         orderCount: state.totalCount.toString(),
+                              //         price: state.totalPrice.toString(),
+                              //         onCancel: () => context.read<CartBloc>().add(ClearCart()),
+                              //         onOrder: () {
+                              //           // Handle order submit
+                              //         },
+                              //       );
+                              //     }
+                              //     return OrderCartWidget(title: "Your Order", orderCount: '0', price: '0', onCancel:(){}, onOrder:(){});
+                              //
+                              //   },
+                              // ),
 
                             ],
                           ),

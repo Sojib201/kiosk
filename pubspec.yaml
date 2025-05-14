@@ -42,10 +42,9 @@ dependencies:
   esc_pos_printer: ^4.0.0
   http:
   file_picker:
-  video_player:
   flutter_dotenv: ^5.2.1
   cached_network_image:
-  shared_preferences:
+  shared_preferences: ^2.5.1
   flutter_bloc: ^9.0.0
   equatable: ^2.0.7
   hive_flutter: ^1.1.0
@@ -54,7 +53,8 @@ dependencies:
   connectivity_plus: ^6.1.3
   image:
   device_info_plus: ^11.4.0
-  path_provider:
+  path_provider: ^2.1.5
+  intl: ^0.18.0
 
 
 dev_dependencies:

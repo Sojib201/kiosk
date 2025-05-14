@@ -3,15 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiosk/src/core/utils/color_utils.dart';
 
 class OrderCartWidget extends StatelessWidget {
-  final String title;
-  final int orderCount;
-  final double price;
+
+  final String orderCount;
+  final String price;
   final VoidCallback onCancel;
   final VoidCallback onOrder;
 
   const OrderCartWidget({
     super.key,
-    required this.title,
     required this.orderCount,
     required this.price,
     required this.onCancel,
@@ -64,8 +63,7 @@ class OrderCartWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
+                  Text('Your Order',
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
@@ -88,7 +86,7 @@ class OrderCartWidget extends StatelessWidget {
                       ),
                       SizedBox(width: 10.w),
                       Text(
-                        "\$${price.toStringAsFixed(2)}",
+                        "\$${price}",
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
