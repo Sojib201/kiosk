@@ -10,6 +10,7 @@ import 'package:kiosk/src/data/models/settings_mode.dart';
 import 'package:kiosk/src/features/home_screen/widgets/add_item_popup/bloc/qty_inc_dec/qty_inc_dec_bloc.dart';
 import 'package:kiosk/src/features/home_screen/widgets/add_item_popup/bloc/qty_inc_dec/qty_inc_dec_event.dart';
 import 'package:kiosk/src/features/home_screen/widgets/add_item_popup/selected_item_popup.dart';
+import 'package:kiosk/src/features/home_screen/widgets/busket_widget.dart';
 import 'package:kiosk/src/features/home_screen/widgets/catagory/category_widget.dart';
 import 'package:kiosk/src/features/home_screen/widgets/home_banner_slider.dart';
 import 'package:kiosk/src/features/home_screen/widgets/item_card.dart';
@@ -809,6 +810,8 @@ class _KioskHomeScreenState extends State<KioskHomeScreen> {
                                  print('total: ${state.total}');
                                  print('vat: ${state.vat}');
                                  print('discount: ${state.discount}');
+
+
                                  int qty=0;
                                  for (var e in orderModel.orderData.orderDetails) {
                                    qty+= e.quantity;
@@ -816,9 +819,26 @@ class _KioskHomeScreenState extends State<KioskHomeScreen> {
                                  }
 
                                  print('qty:${qty.toString()}');
-                                  return OrderCartWidget( orderCount:qty.toString() , price: state.total, onCancel: (){}, onOrder: (){});
+                                  return OrderCartWidget( orderCount:qty.toString() , price: state.total, onCancel: (){}, onTap: (){
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+
+
+                                        return BusketWidget();
+                                      },
+                                    );
+                                  },);
                                 }
-                               return OrderCartWidget( orderCount: '0', price: '0', onCancel:(){}, onOrder:(){});
+                               return OrderCartWidget( orderCount: '0', price: '0', onCancel:(){}, onTap: (){
+                                 showDialog(
+                                   context: context,
+                                   builder: (BuildContext context) {
+
+                                     return BusketWidget();
+                                   },
+                                 );
+                               });
                               }),
 
 

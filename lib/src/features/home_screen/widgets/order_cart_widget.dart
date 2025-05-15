@@ -7,14 +7,14 @@ class OrderCartWidget extends StatelessWidget {
   final String orderCount;
   final String price;
   final VoidCallback onCancel;
-  final VoidCallback onOrder;
+  final VoidCallback onTap;
 
   const OrderCartWidget({
     super.key,
     required this.orderCount,
     required this.price,
     required this.onCancel,
-    required this.onOrder,
+    required this.onTap,
   });
 
   @override
@@ -57,62 +57,79 @@ class OrderCartWidget extends StatelessWidget {
               ),
             ),
           ),
-          Row(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Your Order',
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
-                      color: ColorUtils.black,
+          GestureDetector(
+            onTap: onTap,
+            child: Row(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Your Order',
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                        color: ColorUtils.black,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: 6.h),
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 14.r,
-                        backgroundColor: ColorUtils.secondaryColor,
-                        child: Center(
-                          child: Text(
-                            orderCount.toString(),
-                            style: TextStyle(fontSize: 15.sp,color: ColorUtils.primaryColor),
+                    SizedBox(height: 6.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 14.r,
+                          backgroundColor: ColorUtils.secondaryColor,
+                          child: Center(
+                            child: Text(
+                              orderCount.toString(),
+                              style: TextStyle(fontSize: 15.sp,color: ColorUtils.primaryColor),
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(width: 10.w),
-                      Text(
-                        "\$${price}",
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w500,
+                        SizedBox(width: 10.w),
+                        Text(
+                          "\$${price}",
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(width: 40.w),
-              ElevatedButton(
-                onPressed: onOrder,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepOrange,
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(width: 50.w),
+                // ElevatedButton(
+                //   onPressed: onTap,
+                //   style: ElevatedButton.styleFrom(
+                //     backgroundColor: Colors.deepOrange,
+                //     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                //     shape: RoundedRectangleBorder(
+                //       borderRadius: BorderRadius.circular(12.r),
+                //     ),
+                //   ),
+                //   child: Text(
+                //     "Order",
+                //     style: TextStyle(fontSize: 22.sp, color: ColorUtils.primaryColor),
+                //   ),
+                // ),
+                Container(
                   padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-                  shape: RoundedRectangleBorder(
+                  decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12.r),
+                    color: Colors.deepOrange,
+
                   ),
-                ),
-                child: Text(
-                  "Order",
-                  style: TextStyle(fontSize: 22.sp, color: ColorUtils.primaryColor),
-                ),
-              ),
-            ],
+                  child: Text(
+                    "Order",
+                    style: TextStyle(fontSize: 22.sp, color: ColorUtils.primaryColor,fontWeight: FontWeight.bold),
+                  ),
+                )
+              ],
+            ),
           ),
         ],
       ),
