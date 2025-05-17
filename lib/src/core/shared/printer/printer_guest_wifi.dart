@@ -368,7 +368,7 @@
 //     // for (int i = 0; i < orderModel.orderData.orderDetails.length; i++) {
 //     //   allOrderItemsStr += "${foodItemRowAlignString(orderModel.orderData.orderDetails[i], HiveOperation().getData(HiveBoxKeys.currency))}\n\n";
 //     // }
-//     String formattedString = formatOrderDetails(orderModel.orderData.orderDetails,HiveOperation().getData(HiveBoxKeys.currency));
+//    // String formattedString = formatOrderDetails(orderModel.orderData.orderDetails,HiveOperation().getData(HiveBoxKeys.currency));
 //     AllSettings allSettings = await allSettingsFromJson(await HiveOperation().getSettingsData(HiveBoxKeys.allSettings));
 //     User userInfo = await userFromJson(await HiveOperation().getData(HiveBoxKeys.userInfo));
 //     //sunmi print start
@@ -436,8 +436,8 @@
 //       wifiPrinter.printer.text("------------------------------------------------");
 //
 //       // //order list
-//       wifiPrinter.printer.textEncoded(Uint8List.fromList(utf8.encode(formattedString)),
-//           styles: const PosStyles(width: PosTextSize.size1, align: PosAlign.left, bold: false));
+//       // wifiPrinter.printer.textEncoded(Uint8List.fromList(utf8.encode(formattedString)),
+//       //     styles: const PosStyles(width: PosTextSize.size1, align: PosAlign.left, bold: false));
 //       wifiPrinter.printer.emptyLines(1);
 //
 //       wifiPrinter.printer.text("------------------------------------------------");

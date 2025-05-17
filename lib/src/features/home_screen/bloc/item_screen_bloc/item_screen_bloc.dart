@@ -5,11 +5,15 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../core/constants/hive_constants.dart';
+import '../../../../core/shared/common/common_function.dart';
 import '../../../../core/shared/common/download_show_delete_in_local_image.dart';
+import '../../../../core/shared/firebase/firebase_api.dart';
 import '../../../../data/datasources/local/local_data_source.dart';
 import '../../../../data/datasources/remote/remote_data_source.dart';
+import '../../../../data/models/notificationModel.dart';
 import '../../../../data/models/settings_mode.dart';
 import '../../../../data/models/user_model.dart';
+import '../../kiosk_home_screen.dart';
 
 
 
@@ -119,128 +123,130 @@ class ItemScreenBloc extends Bloc<ItemScreenEvent, ItemScreenState> {
 
 
 
-    // on<OrderSubmitEvent>((event, emit) async {
-    //   allSettings = event.allSettings;
-    //   log("bloc place");
-    //
-    //   if (await CommonFunction().hasInternetConnection()) {
-    //     if (event.isCancel) {
-    //       emit(CancelOrderLoading());
-    //     } else {
-    //       emit(SubmitLoading());
-    //     }
-    //
-    //     log(jsonEncode(event.body), name: "order bodyssssssssssss");
-    //
-    //     Map<String, dynamic> responseData = await GetDataFromApi().submitOrder(event.body);
-    //     log("resoponse is");
-    //
-    //     log(responseData.toString(), name: "order resposce");
-    //
-    //     if (responseData["status"] == "Success") {
-    //       if (orderModel.orderData.orderNo.isNotEmpty && event.isCancel) {
-    //         try {
-    //           await FirebaseAPIs().deleteOrderToFireBase(orderModel);
-    //         } catch (e) {
-    //           log(e.toString());
-    //         }
-    //       } else if (orderModel.orderData.orderNo.isEmpty && !event.isCancel) {
-    //         orderModel.orderData.orderNo = responseData["order_no"].toString();
-    //         try {
-    //           log("Adding new order to firebase");
-    //           await FirebaseAPIs().addOrderToFireBase(orderModel);
-    //         } catch (e) {
-    //           log(e.toString());
-    //         }
-    //       }
-    //       else if (orderModel.orderData.orderNo.isNotEmpty && !event.isCancel) {
-    //         List newItems = [];
-    //         List<String> count = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"];
-    //         // Fetch all existing orders
-    //         List<NotificationModel> notificationList = await FirebaseAPIs().getAllOrderListForCheckData();
-    //
-    //         log("🔍 Total fetched orders: ${jsonEncode(notificationList.first.orderData.orderDetails)}");
-    //
-    //         // Filter by same orderNo
-    //         List<NotificationModel> sameOrders = notificationList.where((element) => element.orderData.orderNo == orderModel.orderData.orderNo).toList();
-    //         log("🔍 Total same orders: ${sameOrders.length}${jsonEncode(sameOrders)}");
-    //
-    //
-    //         List<String> existingItemIds = sameOrders.first.orderData.orderDetails.map<String>((e) => e.itemId.toString()).toList();
-    //        ///old code
-    //         orderModel.orderData.orderDetails.forEach((element) {
-    //           bool isDifferent = true;
-    //
-    //           sameOrders.first.orderData.orderDetails.forEach((element1) {
-    //             if (element.itemId == element1.itemId) {
-    //               isDifferent = false;
-    //               if (count.contains(element1.itemType)) {
-    //                 element.itemType = (int.parse(element1.itemType.toString()) + 1).toString();
-    //               } else {
-    //                 if (element1.itemType == "Cooking") {
-    //                   element.itemType = "Cooking";
-    //                 }
-    //                 if (element1.itemType == "Ready") {
-    //                   element.itemType = "Ready";
-    //                 }
-    //               }
-    //             }
-    //             if (element.itemId == element1.itemId && element.itemName == element1.itemName && element.portionSize == element1.portionSize && element.quantity != element1.quantity) {
-    //               isDifferent = true;
-    //             }
-    //           });
-    //
-    //           if (isDifferent) {
-    //             log("${element.itemId} is not in sameOrders", name: "Different Item ID");
-    //
-    //             log("message ${element.itemType} ooooo not in count");
-    //             element.itemType = "1";
-    //
-    //             newItems.add(element);
-    //           }
-    //         });
-    //
-    //
-    //         log(jsonEncode(newItems), name: "new items");
-    //
-    //         log(jsonEncode(orderModel), name: "order model for update");
-    //
-    //         try {
-    //           log("edit order to firebase");
-    //         //  log(jsonEncode(orderModel));
-    //           await FirebaseAPIs().editOrderToFireBase(orderModel);
-    //         } catch (e) {
-    //           log(e.toString());
-    //         }
-    //       }
-    //
-    //       // log(jsonEncode(orderModel), name: "Empty");
-    //       await printInvoice(orderModel);
-    //       await Future.delayed(Duration(seconds: 3));
-    //
-    //       emit(const OrderSubmittedSuccessState("Order Submit Success"));
-    //       if (await HiveOperation().getBooleanData(HiveBoxKeys.isSecondaryConnected) ?? false) {
-    //         String dataFile = await HiveOperation().getData(HiveBoxKeys.fileDataKey);
-    //         String dataType = await HiveOperation().getData(HiveBoxKeys.fileDataType);
-    //         try {
-    //           await displayManager.transferDataToPresentation({"file_name": dataFile, "view_type": "video_image_only", "order_model": "", "file_type": dataType});
-    //         } catch (e) {
-    //           log(e.toString());
-    //         }
-    //       }
-    //
-    //       orderModel.clearAllData();
-    //     } else {
-    //       emit(ErrorState());
-    //
-    //       CommonFunction().showmessgae("${responseData["message"]}", false);
-    //     }
-    //   } else {
-    //     CommonFunction().showmessgae("No Internet Connection Try With Internet", false);
-    //   }
-    //
-    //   // TODO: implement event handler
-    // });
+    on<OrderSubmitEvent>((event, emit) async {
+      allSettings = event.allSettings;
+      log("bloc place");
+
+      if (await CommonFunction().hasInternetConnection()) {
+        if (event.isCancel) {
+          emit(CancelOrderLoading());
+        } else {
+          emit(SubmitLoading());
+        }
+
+        log(jsonEncode(event.body), name: "order bodyssssssssssss");
+
+        Map<String, dynamic> responseData = await GetDataFromApi().submitOrder(event.body);
+        log("resoponse is");
+
+        log(responseData.toString(), name: "order resposce");
+
+        if (responseData["status"] == "Success") {
+          if (orderModel.orderData.orderNo.isNotEmpty && event.isCancel) {
+            try {
+              await FirebaseAPIs().deleteOrderToFireBase(orderModel);
+            } catch (e) {
+              log(e.toString());
+            }
+          }
+          else if (orderModel.orderData.orderNo.isEmpty && !event.isCancel) {
+            orderModel.orderData.orderNo = responseData["order_no"].toString();
+            try {
+
+              log("Adding new order to firebase");
+              await FirebaseAPIs().addOrderToFireBase(orderModel);
+            } catch (e) {
+              log(e.toString());
+            }
+          }
+          else if (orderModel.orderData.orderNo.isNotEmpty && !event.isCancel) {
+            List newItems = [];
+            List<String> count = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"];
+            // Fetch all existing orders
+            List<NotificationModel> notificationList = await FirebaseAPIs().getAllOrderListForCheckData();
+
+            log("🔍 Total fetched orders: ${jsonEncode(notificationList.first.orderData.orderDetails)}");
+
+            // Filter by same orderNo
+            List<NotificationModel> sameOrders = notificationList.where((element) => element.orderData.orderNo == orderModel.orderData.orderNo).toList();
+            log("🔍 Total same orders: ${sameOrders.length}${jsonEncode(sameOrders)}");
+
+
+            List<String> existingItemIds = sameOrders.first.orderData.orderDetails.map<String>((e) => e.itemId.toString()).toList();
+           ///old code
+            orderModel.orderData.orderDetails.forEach((element) {
+              bool isDifferent = true;
+
+              sameOrders.first.orderData.orderDetails.forEach((element1) {
+                if (element.itemId == element1.itemId) {
+                  isDifferent = false;
+                  if (count.contains(element1.itemType)) {
+                    element.itemType = (int.parse(element1.itemType.toString()) + 1).toString();
+                  } else {
+                    if (element1.itemType == "Cooking") {
+                      element.itemType = "Cooking";
+                    }
+                    if (element1.itemType == "Ready") {
+                      element.itemType = "Ready";
+                    }
+                  }
+                }
+                if (element.itemId == element1.itemId && element.itemName == element1.itemName && element.portionSize == element1.portionSize && element.quantity != element1.quantity) {
+                  isDifferent = true;
+                }
+              });
+
+              if (isDifferent) {
+                log("${element.itemId} is not in sameOrders", name: "Different Item ID");
+
+                log("message ${element.itemType} ooooo not in count");
+                element.itemType = "1";
+
+                newItems.add(element);
+              }
+            });
+
+
+            log(jsonEncode(newItems), name: "new items");
+
+            log(jsonEncode(orderModel), name: "order model for update");
+
+            try {
+              log("edit order to firebase");
+            //  log(jsonEncode(orderModel));
+              await FirebaseAPIs().editOrderToFireBase(orderModel);
+            } catch (e) {
+              log(e.toString());
+            }
+          }
+
+          // log(jsonEncode(orderModel), name: "Empty");
+         // await printInvoice(orderModel);
+          await Future.delayed(Duration(seconds: 3));
+
+          emit(const OrderSubmittedSuccessState("Order Submit Success"));
+          // if (await HiveOperation().getBooleanData(HiveBoxKeys.isSecondaryConnected) ?? false) {
+          //   String dataFile = await HiveOperation().getData(HiveBoxKeys.fileDataKey);
+          //   String dataType = await HiveOperation().getData(HiveBoxKeys.fileDataType);
+          //   try {
+          //     //await displayManager.transferDataToPresentation({"file_name": dataFile, "view_type": "video_image_only", "order_model": "", "file_type": dataType});
+          //   } catch (e) {
+          //     log(e.toString());
+          //   }
+          // }
+
+          orderModel.clearAllData();
+        } else {
+          emit(ErrorState());
+
+          CommonFunction().showmessgae("${responseData["message"]}", false);
+        }
+      } else {
+        CommonFunction().showmessgae("No Internet Connection Try With Internet", false);
+      }
+
+      // TODO: implement event handler
+    });
   }
 
 

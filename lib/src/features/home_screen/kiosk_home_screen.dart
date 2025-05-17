@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +18,7 @@ import 'package:kiosk/src/features/home_screen/widgets/home_banner_slider.dart';
 import 'package:kiosk/src/features/home_screen/widgets/item_card.dart';
 import 'package:kiosk/src/features/home_screen/widgets/order_cart_widget.dart';
 import 'package:kiosk/src/features/home_screen/widgets/tag_widget.dart';
+import '../../core/shared/firebase/firebase_api.dart';
 import '../../data/models/order_model.dart';
 import 'app_drawer/AppDrawer.dart';
 import 'bloc/add_to_cart/order_bloc.dart';
@@ -42,6 +45,8 @@ class _KioskHomeScreenState extends State<KioskHomeScreen> {
   List<ItemList> itemList = [];
   AllSettings? allSettings;
   TextEditingController _searchingController = TextEditingController();
+
+  FirebaseAPIs? _firebaseAPIs;
 
 
   final List<String> imageAssets = [
@@ -75,6 +80,9 @@ class _KioskHomeScreenState extends State<KioskHomeScreen> {
     context.read<ItemScreenBloc>().add(
           GetAllResturantData(false),
         );
+    _firebaseAPIs = FirebaseAPIs();
+
+    _firebaseAPIs!.getInformation();
   }
 
   @override
@@ -92,7 +100,21 @@ class _KioskHomeScreenState extends State<KioskHomeScreen> {
         title: "",
       ),
       body: SafeArea(
-        child: BlocBuilder<ItemScreenBloc, ItemScreenState>(
+        child: BlocConsumer<ItemScreenBloc, ItemScreenState>(
+          listener:  (context, state) {
+            if (state is OrderSubmittedSuccessState) {
+              log("333333333333333333333333333388888888888888888888234324324");
+              //context.read<HomeBloc>().add(GetTableStatus("B001", false));
+              Fluttertoast.showToast(msg: state.message);
+
+              Navigator.pop(context);
+              orderModel.clearAllData();
+              context.read<ItemScreenBloc>().add(
+                GetAllResturantData(false),
+              );
+
+            }
+          },
           builder: (context, state) {
             if (state is ItemDataLoadedState) {
               allSettings = state.allSettings;
@@ -819,13 +841,15 @@ class _KioskHomeScreenState extends State<KioskHomeScreen> {
                                  }
 
                                  print('qty:${qty.toString()}');
-                                  return OrderCartWidget( orderCount:qty.toString() , price: state.total, onCancel: (){}, onTap: (){
+                                  return OrderCartWidget( orderCount:qty.toString() , price: orderModel.orderData.grandTotal.toStringAsFixed(2), onCancel: (){}, onTap: (){
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
 
 
-                                        return BusketWidget();
+                                        return BusketWidget(
+                                          allSettings: allSettings!,
+                                        );
                                       },
                                     );
                                   },);
@@ -835,7 +859,9 @@ class _KioskHomeScreenState extends State<KioskHomeScreen> {
                                    context: context,
                                    builder: (BuildContext context) {
 
-                                     return BusketWidget();
+                                     return BusketWidget(
+                                       allSettings: allSettings!,
+                                     );
                                    },
                                  );
                                });
